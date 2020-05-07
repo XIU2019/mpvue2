@@ -1,8 +1,9 @@
 {
   "pages": [
+        "pages/address/main",
+    "pages/updateAddress/main",
     "pages/addAddress/main",
     "pages/index/main",
-    "pages/address/main",
     "pages/onSubmitOder/main",
     "pages/login/main",
     "pages/my/main",

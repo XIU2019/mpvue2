@@ -3,37 +3,25 @@
     <div class="top"></div>
     <div class="main">
       <van-cell-group>
-
-
-        <!--        <van-field-->
-        <!--          label="收货地址："-->
-        <!--          v-bind:value="address"-->
-        <!--          placeholder="点击选择地址"-->
-        <!--          v-bind:border="false"-->
-        <!--          @change="onChangeAddress2"-->
-        <!--          right-icon="arrow"-->
-        <!--        />-->
-        <van-cell v-if="selected" v-bind:title=" selectedAddress" @click="showPopup">
+        <van-cell v-bind:title="selectedAddress" @click="showPopup">
           <van-icon slot="right-icon" name="location-o" class="custom-icon"/>
         </van-cell>
-        <van-cell v-else v-bind:title=" selectedAddress" @click="showPopup">
-          <van-icon slot="right-icon" name="location-o" class="custom-icon"/>
-        </van-cell>
+
         <van-field
-          v-bind:value="address"
+          v-bind:value="addressInfo[0].address"
           label="门牌号"
           placeholder="详细地址，例如1层101室"
           @change="onChangeAddress2($event)"
         />
 
         <van-field
-          v-bind:value="userName"
+          v-bind:value="addressInfo[0].userName"
           label="联系人"
           placeholder="请输入收货人姓名"
           @change="onChangeUserName"
         />
         <van-field
-          v-bind:value="phone"
+          v-bind:value="addressInfo[0].phone"
           label="手机号"
           placeholder="请输入联系人手机号码"
           @change="onChangePhone"
@@ -66,31 +54,35 @@
 </template>
 
 <script>
-
-  import Dialog from '../../../static/vant/dialog/dialog'
-
   export default {
     computed: {},
-    onLoad: function () {
+    onLoad: function (e) {
+      console.log(e.id)
+      this.initAddressInfo()
+      Object.assign(this.$data, this.$options.data())//用于重新定义data的数据
+      this.selectedId = e.id
 
     },
     onShow: function () {
+      this.initAddressInfo()
+      this.selectedAddress = '收货地址' + this.addressInfo[0].addressCity
 
     },
     onReady () {
-
+      this.initAddressInfo()
+      this.selectedAddress = '收货地址' + '\xa0\xa0' + this.addressInfo[0].addressCity
     },
     data () {
       return {
-        selected: false,
+        addressInfo: [],
+        selectedId: '',
         flat: true,
         address: '',
-        addressCity: '',
         userName: '',
         phone: '',
         message: '',
         show: false,
-        selectedAddress: '收货地址' + '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + '省/市/区',
+        selectedAddress: '收货地址',
         areaList: {
           province_list: {
             450000: '广西壮族自治区',
@@ -229,7 +221,21 @@
       }
     },
     methods: {
+      //初试化
+      initAddressInfo () {
+        let value = wx.getStorageSync('addressInfo')
+        if (value) {
+          this.addressInfo = value
+          console.log(value)
+        } else {
+          this.addressInfo = ''
+        }
+        this.addressInfo = this.addressInfo.filter(item => item._id === this.selectedId)
+
+      },
+
       showPopup () {
+
         this.show = true
       },
       onClose () {
@@ -238,90 +244,75 @@
       confirm (event) {
         this.show = false
         this.selected = true
-        // console.log(event.mp.detail)
-        // let m = new Map()
         let m = event.mp.detail.values
-        // console.log(typeof m)
-        // console.log(JSON.stringify(m[0].name))
-        this.addressCity= m[0].name + m[1].name + m[2].name
-        console.log(this.addressCity)
+        this.addressAll = m[0].name + m[1].name + m[2].name
+        console.log(this.addressAll)
         this.selectedAddress = '收货地址' + '\xa0\xa0\xa0\xa0\xa0' + m[0].name + m[1].name + m[2].name
         console.log(this.selectedAddress)
-        // for (var i = 0; i < m.length; i++) {
-        //
-        //   let name = m[i].name
-        //   console.log(name)
-        //   this.names = this.names.concat(name)
-        // }
-        // console.log(this.names)
-        // for (let value of this.names.values()) {
-        //   console.log(value)
-        // }
+        this.addressInfo[0].addressCity=this.selectedAddress
       },
       onchangeArea (event) {
-        // console.log(event.mp.detail)
+
       },
       onCancel () {
         this.show = false
       },
+
       //获取门牌号
       onChangeAddress2 (event) {
-        this.address = event.mp.detail
+        this.addressInfo[0].address = event.mp.detail
         console.log(event.mp.detail)
       },
       //获取联系人
       onChangeUserName (event) {
         console.log(event.mp.detail)
-        this.userName = event.mp.detail
+        this.addressInfo[0].userName = event.mp.detail
       },
-      //  获取联系电话
-      // onInput (event) {
-      //   console.log(event.mp.detail);
-      //   var that = this;
-      //   let phone = event.mp.detail;
-      //   if (!(/^1([3456789])\d{9}$/.test(phone))) {
-      //     that.message = '手机号码格式错误';
-      //     that.phone = '';
-      //   } else {
-      //       that.message='';
-      //     that.phone = phone;
-      //   }
-      // },
-      //  获取联系电话
 
+      //  获取联系电话
       onChangePhone (event) {
         var that = this
         let phone = event.mp.detail
         if (!(/^1([3456789])\d{9}$/.test(phone))) {
           that.message = '手机号码格式错误'
-          that.phone = ''
+          that.addressInfo[0].phone = ''
         } else {
           that.message = ''
-          that.phone = phone
+          that.addressInfo[0].phone = phone
         }
       },
       //  增加地址
       addAddress () {
         var that = this
+        console.log(that.addressInfo[0].userName)
         // that.addressAll = that.addressAll + that.address
         //添加到数据库
-        const db = wx.cloud.database()
-        db.collection('address').add({
-          data:
-            {
-              addressCity:that.addressCity,
-              address: that.address,
-              userName: that.userName,
-              phone: that.phone,
-            }
-        })
-        wx.showToast({
-          title: '保存成功',
-        })
-        that.flat = false
-        wx.navigateTo({
-          url: '/pages/address/main?flat=false',
-        })
+        // const db = wx.cloud.database()
+        // db.collection('address').doc(this.selectedId).update({
+        //   data:{
+        //       userName: that.addressInfo[0].userName,
+        //   }
+        // }).then(res=>{console.log(res)})
+        // .catch(err=>{console.log(err)})
+        //利用云函数更新
+        wx.cloud.callFunction({
+          name:'addAddress',
+          data:{
+            _id:that.selectedId,
+            addressCity:that.addressInfo[0].addressCity,
+            address:that.addressInfo[0].address,
+            phone:that.addressInfo[0].phone,
+            userName:that.addressInfo[0].userName,
+          }
+        }).then(res =>{console.log(res)})
+        .catch(err=>{console.log(err)})
+        // wx.showToast({
+        //   title: '修改成功',
+        // })
+        // that.flat = false
+        // wx.navigateTo({
+        //   url: '/pages/address/main?flat=false',
+        // })
       },
     },
   }

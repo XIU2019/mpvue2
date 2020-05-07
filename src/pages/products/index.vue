@@ -598,16 +598,6 @@
           //   }
           // }
           //将value中的子数组转化成数组  利用map
-          let test = []
-          if (value && value.length > 0) {
-            value.map(val => {
-              if (val) {
-                test = [...test, ...val]
-              } else {
-                test = [...test]
-              }
-            })
-          }
           console.log('test', test)
           //利用filter方法   筛选出已经添加的菜单，根据数组的长度判断，是否添加到购物车
           let dd = test.filter(item => item._id === this.selectedGood[0]._id)
