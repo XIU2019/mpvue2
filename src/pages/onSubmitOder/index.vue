@@ -5,7 +5,7 @@
         <van-tabs bind:click="onClick">
           <van-tab title="外卖配送">
             <van-cell-group>
-              <van-cell is-link @click="showPopup">
+              <van-cell is-link @click="showPopup" v-if="flat">
                 <view slot="icon">
                   <van-icon name="add-o" color="red" size="18px" @click="showPopup"/>
                 </view>
@@ -13,11 +13,13 @@
                   <view class="van-cell-text">
                     <text class="oder_top_text" @click="showPopup">添加收货地址</text>
                   </view>
-
                 </view>
               </van-cell>
-              <van-cell title="立即送出" value="内容" is-link/>
-              <van-cell title="预留电话" is-link value="内容"/>
+              <van-cell is-link @click="showPopup" center
+                        v-bind:title="selectedAddressInfo[0].userName+selectedAddressInfo[0].phone"
+                        v-bind:label="selectedAddressInfo[0].addressCity+selectedAddressInfo[0].address" v-else/>
+              <van-cell title="立即送出" v-bind:value="time" is-link @click="showPopupTime"/>
+              <!--               <van-cell title="预留电话" is-link value="内容"/>-->
             </van-cell-group>
           </van-tab>
           <van-tab title="食堂自取">
@@ -53,10 +55,10 @@
             </van-cell>
             <van-cell title="包装费" v-bind:value="totalNum"/>
             <van-cell title="配送费" value="￥1"/>
-            <van-cell title="小计" v-bind:value="totalMoney"/>
+            <van-cell title="小计" v-bind:value="'￥'+totalMoney"/>
             <van-cell title="支付方式" value="线上支付"/>
-            <van-cell title="备注" is-link value="点击无接触配送"/>
-            <van-cell title="备注" value="点击无接触配送"/>
+            <van-cell title="备注" is-link value="点击无接触配送" link-type="navigateTo"
+                      url="/pages/orderMessage/main"/>
           </van-cell-group>
         </van-swipe-cell>
       </div>
@@ -68,7 +70,7 @@
         />
       </div>
     </div>
-    <!--    弹出窗口-->
+    <!-- 地址弹出窗口-->
     <van-popup v-bind:show="show" @close="onClose" position="bottom" custom-style="height: 50%;">
       <div class="main ">
         <div class="cart"
@@ -102,6 +104,16 @@
         <van-icon name="add-o" color="red" size="18px" @click="addAddress"/>
         <text class="oder_top_text" @click="addAddress">添加收货地址</text>
       </div>
+    </van-popup>
+    <!-- 时间弹出窗口-->
+    <van-popup v-bind:show="showTime" @close="onCloseTime" position="bottom" custom-style="height: 50%;">
+      <van-datetime-picker
+        type="time"
+        v-bind:value="currentDate"
+        v-bind:filter="filter"
+        @confirm="confirmTime($event)"
+        @cancel="cancelTime"
+      />
     </van-popup>
   </div>
 </template>
@@ -144,9 +156,19 @@
         totalNum: '',//包装费
         totalPrice: 0,//总价
         totalMoney: 0,//转换
-        show: false,//弹出层
-        flat: true,
+        show: false,//地址弹出层
+        flat: true,//是否选择了地址
         addressInfo: [],
+        selectedAddressInfo: [],
+        showTime: false,//时间弹出窗口
+        time: '',//渲染的时间数据
+        currentDate: '12:00',
+        filter (type, options) {
+          if (type === 'minute') {
+            return options.filter((option) => option % 15 === 0)
+          }
+          return options
+        },
       }
     },
     methods: {
@@ -191,7 +213,47 @@
           })
         })
       },
+      //  选择地址
+      onSelected (id) {
+        // console.log(id)
+        const index = this.addressInfo.findIndex(item => item._id === id)
+        const selected = this.addressInfo[index].selected
+        this.addressInfo[index].selected = !selected
+        this.$set(this.addressInfo, index, this.addressInfo[index])
+        this.flat = false
+        this.selectedAddressInfo = this.addressInfo.filter(item => item._id === id)//将选中的地址展示出来上
+      },
+      //新增地址
+      addAddress () {
+        wx.navigateTo({
+          url: '/pages/addAddress/main',
+        })
+      },
+      //  编辑地址
+      updateAddress (id) {
+        // console.log(id)
+        wx.navigateTo({
+          url: `/pages/updateAddress/main?id=${id}`,
+        })
+      },
+      //  删除地址
+      deleteAddress (id) {
+        // console.log(id)
+        var that = this
+        const db = wx.cloud.database()
+        db.collection('address')
+          .where(
+            {
+              _id: id,
+            }
+          ).remove().then(res => {
+          console.log(res)
+          that.getAddress()
+        }).catch(err => {
+          console.log(err)
+        })
 
+      },
       //计算总价
       getTotalPrice () {
         let carts = this.carts                 // 获取购物车列表
@@ -214,11 +276,24 @@
       showPopup () {
         this.show = true
       },
-
       onClose () {
         this.show = false
-      }
+      },
+      showPopupTime () {
+        this.showTime = true
+      },
+      onCloseTime () {
+        this.showTime = false
+      },
+      confirmTime (event) {
+        console.log(event.mp.detail)
+        this.currentDate = event.mp.detail
+        this.time = '大约' + this.currentDate + '送达'
+        this.showTime = false
+      },
+      cancelTime () {
 
+      },
     },
   }
 </script>
@@ -251,7 +326,7 @@
   .oder_main {
     margin-top: 10px;
     width: 100%;
-    height: 300px;
+    /*height: 400px;*/
     background: #fff;
   }
 

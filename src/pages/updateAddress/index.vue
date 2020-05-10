@@ -249,7 +249,7 @@
         console.log(this.addressAll)
         this.selectedAddress = '收货地址' + '\xa0\xa0\xa0\xa0\xa0' + m[0].name + m[1].name + m[2].name
         console.log(this.selectedAddress)
-        this.addressInfo[0].addressCity = this.selectedAddress
+        this.addressInfo[0].addressCity = this.addressAll
       },
       onchangeArea (event) {
 

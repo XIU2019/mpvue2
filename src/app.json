@@ -1,13 +1,14 @@
 {
   "pages": [
-    "pages/onSubmitOder/main",
+    "pages/orderMessage/main",
     "pages/address/main",
+    "pages/products/main",
+    "pages/onSubmitOder/main",
     "pages/updateAddress/main",
     "pages/addAddress/main",
     "pages/index/main",
     "pages/login/main",
     "pages/my/main",
-    "pages/products/main",
     "pages/search/main",
     "pages/manage/main",
     "pages/go/main",
@@ -80,7 +81,8 @@
     "van-swipe-cell": "./static/vant/swipe-cell/index",
     "van-dialog": "./static/vant/dialog/index",
     "van-area": "./static/vant/area/index",
-    "van-picker": "./static/vant/picker/index"
+    "van-picker": "./static/vant/picker/index",
+    "van-datetime-picker": "./static/vant/datetime-picker/index"
   },
   "expo": {
   },
