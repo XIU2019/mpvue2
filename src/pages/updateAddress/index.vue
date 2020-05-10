@@ -249,7 +249,7 @@
         console.log(this.addressAll)
         this.selectedAddress = '收货地址' + '\xa0\xa0\xa0\xa0\xa0' + m[0].name + m[1].name + m[2].name
         console.log(this.selectedAddress)
-        this.addressInfo[0].addressCity=this.selectedAddress
+        this.addressInfo[0].addressCity = this.selectedAddress
       },
       onchangeArea (event) {
 
@@ -261,11 +261,11 @@
       //获取门牌号
       onChangeAddress2 (event) {
         this.addressInfo[0].address = event.mp.detail
-        console.log(event.mp.detail)
+        // console.log(event.mp.detail)
       },
       //获取联系人
       onChangeUserName (event) {
-        console.log(event.mp.detail)
+        // console.log(event.mp.detail)
         this.addressInfo[0].userName = event.mp.detail
       },
 
@@ -284,8 +284,6 @@
       //  增加地址
       addAddress () {
         var that = this
-        console.log(that.addressInfo[0].userName)
-        // that.addressAll = that.addressAll + that.address
         //添加到数据库
         // const db = wx.cloud.database()
         // db.collection('address').doc(this.selectedId).update({
@@ -296,23 +294,27 @@
         // .catch(err=>{console.log(err)})
         //利用云函数更新
         wx.cloud.callFunction({
-          name:'addAddress',
-          data:{
-            _id:that.selectedId,
-            addressCity:that.addressInfo[0].addressCity,
-            address:that.addressInfo[0].address,
-            phone:that.addressInfo[0].phone,
-            userName:that.addressInfo[0].userName,
+          name: 'addAddress',
+          data: {
+            _id: that.selectedId,
+            addressCity: that.addressInfo[0].addressCity,
+            address: that.addressInfo[0].address,
+            phone: that.addressInfo[0].phone,
+            userName: that.addressInfo[0].userName,
           }
-        }).then(res =>{console.log(res)})
-        .catch(err=>{console.log(err)})
-        // wx.showToast({
-        //   title: '修改成功',
-        // })
-        // that.flat = false
-        // wx.navigateTo({
-        //   url: '/pages/address/main?flat=false',
-        // })
+        }).then(res => {
+          console.log(res)
+          wx.showToast({
+            title: '修改成功',
+          })
+          that.flat = false
+          wx.navigateTo({
+            url: '/pages/address/main?flat=false',
+          })
+        })
+          .catch(err => {
+            console.log(err)
+          })
       },
     },
   }

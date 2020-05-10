@@ -23,7 +23,7 @@
           </div>
           <div class="cart_foot">
             <view class="cart_foot_text">
-            {{item.addressCity}}  {{item.address}}
+              {{item.addressCity}} {{item.address}}
             </view>
           </div>
         </div>
@@ -47,17 +47,17 @@
   export default {
     computed: {},
     onLoad: function (e) {
-      console.log(e.flat)
-      this.getAddress();
+      // console.log(e.flat)
+      this.getAddress()
       Object.assign(this.$data, this.$options.data())//用于重新定义data的数据
       this.flat = false
       //
     },
     onShow: function () {
-  this.getAddress();
+      this.getAddress()
     },
     onReady () {
- this.getAddress();
+      this.getAddress()
     },
     data () {
       return {
@@ -76,7 +76,7 @@
           console.log(res)
           that.addressInfo = []
           that.addressInfo = that.addressInfo.concat(res.data)
-          console.log(that.addressInfo)
+          // console.log(that.addressInfo)
           //  给addressInfo添加选择属性
           that.addressInfo.map(item => {
             item.selected = false
@@ -95,7 +95,7 @@
       },
       //  选择地址
       onSelected (id) {
-        console.log(id)
+        // console.log(id)
         const index = this.addressInfo.findIndex(item => item._id === id)
         const selected = this.addressInfo[index].selected
         this.addressInfo[index].selected = !selected
@@ -109,14 +109,14 @@
       },
       //  编辑地址
       updateAddress (id) {
-        console.log(id)
+        // console.log(id)
         wx.navigateTo({
           url: `/pages/updateAddress/main?id=${id}`,
         })
       },
       //  删除地址
       deleteAddress (id) {
-        console.log(id)
+        // console.log(id)
         var that = this
         const db = wx.cloud.database()
         db.collection('address')
@@ -125,9 +125,11 @@
               _id: id,
             }
           ).remove().then(res => {
-          console.log(res);
-            that.getAddress();
-        }).catch(err=>{console.log(err)})
+          console.log(res)
+          that.getAddress()
+        }).catch(err => {
+          console.log(err)
+        })
 
       },
     },
