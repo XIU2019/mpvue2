@@ -57,7 +57,7 @@
             <van-cell title="配送费" value="￥1"/>
             <van-cell title="小计" v-bind:value="'￥'+totalMoney"/>
             <van-cell title="支付方式" value="线上支付"/>
-            <van-cell title="备注" is-link value="点击无接触配送" link-type="navigateTo"
+            <van-cell title="备注" is-link v-bind:value="message" link-type="navigateTo"
                       url="/pages/orderMessage/main"/>
           </van-cell-group>
         </van-swipe-cell>
@@ -131,13 +131,16 @@
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad: function (options) {
+    onLoad: function (e) {
       //读取购物车数据
       this.initCart()
       this.getTotalPrice()
       // this.initCarts()
       // this.getGoodList()
       this.getAddress()
+      console.log(e)
+      Object.assign(this.$data, this.$options.data())
+      this.message = e.message
     },
 
     /**
@@ -169,6 +172,7 @@
           }
           return options
         },
+        message: '无接触配送',
       }
     },
     methods: {
@@ -292,6 +296,9 @@
         this.showTime = false
       },
       cancelTime () {
+        this.showTime = false
+      },
+      onSubmit () {
 
       },
     },
