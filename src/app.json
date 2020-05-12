@@ -1,15 +1,16 @@
 {
   "pages": [
+    "pages/onSubmitOder/main",
+     "pages/orderDetail/main",
+    "pages/search/main",
     "pages/orderMessage/main",
     "pages/address/main",
     "pages/products/main",
-    "pages/onSubmitOder/main",
     "pages/updateAddress/main",
     "pages/addAddress/main",
     "pages/index/main",
     "pages/login/main",
     "pages/my/main",
-    "pages/search/main",
     "pages/manage/main",
     "pages/go/main",
     "pages/oderList/main"

@@ -2,7 +2,7 @@
   <div class="oder_Container">
     <div class="userContainer">
       <div class="oder_top">
-        <van-tabs bind:click="onClick">
+        <van-tabs @change="onChange($event)">
           <van-tab title="外卖配送">
             <van-cell-group>
               <van-cell is-link @click="showPopup" v-if="flat">
@@ -68,6 +68,7 @@
           button-text="去支付"
           @submit="onSubmit"
         />
+        <van-dialog id="van-dialog" confirm-button-color="#FF2620"/>
       </div>
     </div>
     <!-- 地址弹出窗口-->
@@ -121,6 +122,8 @@
 <script>
 
 
+  import Dialog from '../../../dist/wx/static/vant/dialog/dialog'
+
   export default {
     onReady: function () {
       // this.getGoodList()
@@ -141,6 +144,8 @@
       console.log(e)
       Object.assign(this.$data, this.$options.data())
       this.message = e.message
+      var util = require('../../utils/index.js')
+      this.nowDate = util.formatTime(new Date())
     },
 
     /**
@@ -151,10 +156,11 @@
       this.initCart()
       this.getTotalPrice()
       this.getAddress()
-
     },
     data () {
       return {
+        nowDate: '',//下单时间
+        orderTypes: '外卖配送',//订单类型
         carts: [],
         totalNum: '',//包装费
         totalPrice: 0,//总价
@@ -173,6 +179,8 @@
           return options
         },
         message: '无接触配送',
+        order_id: '',//用户订单的id
+        orderAdmit_id: '',//食堂顶单的id
       }
     },
     methods: {
@@ -298,10 +306,127 @@
       cancelTime () {
         this.showTime = false
       },
-      onSubmit () {
-
+      //获取订单类型  外卖   食堂
+      onChange (event) {
+        this.orderTypes = event.mp.detail.title
+        // console.log(event.mp.detail.title)
       },
-    },
+      //将订单信息添加到用户订单数据库
+      addOder () {
+        var that = this
+        const db = wx.cloud.database()
+        db.collection('order').add({
+          data:
+            {
+              userName: that.selectedAddressInfo[0].userName,
+              phone: that.selectedAddressInfo[0].phone,
+              addressCity: that.selectedAddressInfo[0].addressCity,
+              address: that.selectedAddressInfo[0].address,
+              orderTime: that.nowDate,
+              goodList: that.carts,
+              totalMoney: that.totalMoney,
+              sendTime: that.time,
+              orderTypes: that.orderTypes,
+              orderInfo: that.message,
+              payment: '在线支付',
+              paymentStatus: '待支付',
+              orderStatus: '待支付',
+            }
+        }).then(res => {
+          console.log(res)
+          that.order_id = res._id
+        })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      //添加到食堂管理员端的数据
+      orderAdmit () {
+        var that = this
+        const db = wx.cloud.database()
+        db.collection('orderAdmit').add({
+          data:
+            {
+              userName: that.selectedAddressInfo[0].userName,
+              phone: that.selectedAddressInfo[0].phone,
+              addressCity: that.selectedAddressInfo[0].addressCity,
+              address: that.selectedAddressInfo[0].address,
+              orderTime: that.nowDate,
+              goodList: that.carts,
+              totalMoney: that.totalMoney,
+              sendTime: that.time,
+              orderTypes: that.orderTypes,
+              orderInfo: that.message,
+              payment: '在线支付',
+              paymentStatus: '待支付',
+              orderStatus: '待支付',
+            }
+        }).then(res => {
+          console.log(res)
+          that.orderAdmit_id = res._id
+        })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      //提交按钮
+      onSubmit: function () {
+        var that = this
+
+        that.addOder()
+        that.orderAdmit()
+        Dialog.confirm({
+          title: '请支付',
+          message: '您即将支付￥' + this.totalMoney,
+        })
+          .then((res) =>{
+            // on confirm
+            // 页面提示支付中
+            wx.showLoading({
+              title: '支付中',
+            })
+        const db = wx.cloud.database()
+        //更新order表中的状态
+        db.collection('order').doc(that.order_id)
+          .update({
+              data: {
+                paymentStatus: '已支付',
+                orderStatus: '等待接单',
+              }
+            }
+          ).then(res => {
+          console.log(res)
+        })
+          .catch(err => {
+            console.log(err)
+          })
+        //跟新食堂管理员端的Order表
+        db.collection('orderAdmit').doc(that.orderAdmit_id)
+          .update({
+            data: {
+              paymentStatus: '已支付',
+              orderStatus: '等待接单',
+            }
+          }
+  ).then(res => {
+    console.log(res)
+  })
+    .catch(err => {
+      console.log(err)
+    })
+  wx.showLoading({
+    title: '支付成功',
+  })
+  // 转到订单详情
+  wx.navigateTo({
+    url: '/pages/orderDetail/main',
+  })
+  })
+  .catch(() => {
+    // on cancel
+  })
+  },
+  },
   }
 </script>
 

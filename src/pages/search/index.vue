@@ -24,85 +24,13 @@
       @close="onClose">
       gfhgfh
     </van-popup>
-    <!--    <block>-->
-    <!--    <div v-if="isAuth">首页</div>-->
-    <!--    <div v-else>-->
-    <!--      <div style="text-align:center">用户授权面板</div>-->
-    <!--      <button @click="authorize">授权</button>-->
-    <!--    </div>-->
-    <!--  </block>-->
-<!--    <van-button type="default" @click="onClickTest">默认按钮</van-button>-->
-<!--    <view>-->
-<!--      <van-tree-select-->
-<!--        v-bind:items="items"-->
-<!--        v-bind:main-active-index="mainActiveIndex"-->
-<!--        v-bind:active-id="activeId"-->
-<!--        v-bind:max="max"-->
-<!--        @clickNav="onClickNav($event)"-->
-<!--        @clickItem=" OnClickTreeItemAd($event)"-->
-<!--      >-->
+  <view>
+    {{nowDate}}
+  </view>
 
-<!--        <view>-->
-<!--          <van-tree-select-->
-<!--            v-bind:items="items"-->
-<!--            v-bind:main-active-index="mainActiveIndex"-->
-<!--            v-bind:active-id="activeId"-->
-<!--            v-bind:max="max"-->
-<!--            @clickNav="onClickNav($event)"-->
-<!--            @clickItem=" OnClickItemEvents($event)"-->
-<!--          >-->
-<!--            &lt;!&ndash;             <img src="https://img.yzcdn.cn/vant/apple-1.jpg" slot="content" />&ndash;&gt;-->
-<!--            <view slot="content">-->
-<!--              <van-cell v-for="(item, idx) in goodList" :key="idx" @click="addShop($event)">-->
-<!--                &lt;!&ndash;   常规的商品卡片  &ndash;&gt;-->
-<!--                <van-card-->
-<!--                  v-bind:value="item._id"-->
-<!--                  v-bind:tag="item.category"-->
-<!--                  v-bind:price="item.price"-->
-<!--                  v-bind:desc="item.description"-->
-<!--                  v-bind:title="item.goodName"-->
-<!--                  v-bind:thumb="item.fileIds"-->
-<!--                  thumb-mode="aspectFit"-->
-<!--                >-->
-<!--                  <view slot="tags">-->
-<!--                    <van-icon name="star" color="yellow"/>-->
-<!--                    {{item.score}}-->
-<!--                  </view>-->
-<!--                  <view slot="footer">-->
-
-<!--                  </view>-->
-<!--                </van-card>-->
-<!--              </van-cell>-->
-<!--            </view>-->
-<!--          </van-tree-select>-->
-<!--        </view>-->
-<!--        </van-tab>-->
-<!--      </van-tree-select>-->
-
-<!--    </view>-->
-<!--复选框-->
-    <div>
-      <van-checkbox-group :value="result" @change="onChange2">
-  <van-cell-group >
-    <van-cell
-      v-for="item in test"
-      :key="index"
-      :title="item"
-      clickable
-      :data-name="item"
-      @click="toggle"
-    >
-      <van-checkbox @tap="noop"  :name="item" />
-    </van-cell>
-  </van-cell-group>
-</van-checkbox-group>
     </div>
 
-<div>
 
-</div>
-
-  </div>
 
 </template>
 
@@ -110,10 +38,15 @@
 
 
   export default {
-    computed: {},
 
+    computed: {},
+onLoad(){
+       var util = require('../../utils/index.js')
+       this.nowDate=util.formatTime(new Date())
+},
     data () {
       return {
+         nowDate:'',
         keyword: '',
         show: false,
         active: 1,
