@@ -27,7 +27,7 @@ VantComponent({
     methods: {
         onClick(event) {
             const { index } = event.currentTarget.dataset;
-            this.$emit('click-step', index);
+            this.$emit('clickStep', index);
         }
     },
 });

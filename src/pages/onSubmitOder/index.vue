@@ -379,54 +379,55 @@
           title: '请支付',
           message: '您即将支付￥' + this.totalMoney,
         })
-          .then((res) =>{
+          .then((res) => {
             // on confirm
             // 页面提示支付中
             wx.showLoading({
               title: '支付中',
             })
-        const db = wx.cloud.database()
-        //更新order表中的状态
-        db.collection('order').doc(that.order_id)
-          .update({
-              data: {
-                paymentStatus: '已支付',
-                orderStatus: '等待接单',
-              }
-            }
-          ).then(res => {
-          console.log(res)
-        })
-          .catch(err => {
-            console.log(err)
+            const db = wx.cloud.database()
+            //更新order表中的状态
+            db.collection('order').doc(that.order_id)
+              .update({
+                  data: {
+                    paymentStatus: '已支付',
+                    orderStatus: '等待接单',
+                  }
+                }
+              ).then(res => {
+              console.log(res)
+            })
+              .catch(err => {
+                console.log(err)
+              })
+            //跟新食堂管理员端的Order表
+            db.collection('orderAdmit').doc(that.orderAdmit_id)
+              .update({
+                  data: {
+                    paymentStatus: '已支付',
+                    orderStatus: '等待接单',
+                  }
+                }
+              ).then(res => {
+              console.log(res)
+              // wx.showLoading({
+              //   title: '支付成功',
+              // })
+                // 转到订单详情
+            wx.navigateTo({
+              url: `/pages/orderDetail/main?order_id=${that.order_id}&orderAdmit_id=${that.orderAdmit_id}`,
+            })
+            })
+              .catch(err => {
+                console.log(err)
+              })
+
           })
-        //跟新食堂管理员端的Order表
-        db.collection('orderAdmit').doc(that.orderAdmit_id)
-          .update({
-            data: {
-              paymentStatus: '已支付',
-              orderStatus: '等待接单',
-            }
-          }
-  ).then(res => {
-    console.log(res)
-  })
-    .catch(err => {
-      console.log(err)
-    })
-  wx.showLoading({
-    title: '支付成功',
-  })
-  // 转到订单详情
-  wx.navigateTo({
-    url: '/pages/orderDetail/main',
-  })
-  })
-  .catch(() => {
-    // on cancel
-  })
-  },
-  },
+          .catch(() => {
+            // on cancel
+          })
+      },
+    },
   }
 </script>
 

@@ -31,16 +31,23 @@ i {
 }
 
 /*自定义*/
+.cell-title {
+  /*color: pink !important;*/
+}
+
+.cell-value {
+  color: #555555 !important;
+}
   .D {
     float: left;
-    font-size: 18px;
+    font-size: 16px;
     color: #444;
     line-height: 38px;
   }
 .carts-price {
     float: left;
     color: #ff2026;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 22px;
   }
 .carts-footer {
