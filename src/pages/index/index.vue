@@ -51,38 +51,61 @@
     <!--      </van-grid>-->
     <!--    </view>-->
     <!--    索引栏-->
-    <van-tabs v-bind:active="active" @change="onChange($event)">
-      <van-tab title="全部"/>
-      <van-tab title="早餐"/>
-      <van-tab title="午餐"/>
-      <van-tab title="晚餐"/>
-    </van-tabs>
+    <!--    <van-tabs v-bind:active="active" @change="onChange($event)">-->
+    <!--      <van-tab title="全部"/>-->
+    <!--      <van-tab title="早餐"/>-->
+    <!--      <van-tab title="午餐"/>-->
+    <!--      <van-tab title="晚餐"/>-->
+    <!--    </van-tabs>-->
+    <!--猜你喜欢-->
+    <van-cell>
+      <view slot="title">
+        <van-row>
+          <van-col span="8">
+            <view class="van-cell-text">限时秒杀</view>
+          </van-col>
+          <van-col span="8">
+            <van-count-down use-slot  v-bind:time=" time " @change="onChangeTime($event)">
+              <text class="item">{{ timeData.hours }}</text>
+              <text class="item">{{ timeData.minutes }}</text>
+              <text class="item">{{ timeData.seconds }}</text>
+            </van-count-down>
+          </van-col>
 
+        </van-row>
+      </view>
+    </van-cell>
     <!--      使用宫格方式展示-->
-    <van-grid column-num="2">
-      <van-grid-item
-        use-slot
-        v-for="(item, idx) in goodList" :key="idx"
-        link-type="navigateTo"
-        url="/pages/products/main?index=${item.index}"
-      >
-        <img
-          style="width: 100%; height: 90px;"
-          v-bind:src="item.fileIds"
-        />
-        <p class="title">{{item.goodName}}
-          <van-tag plain color="#2bb0a6">{{item.category}}</van-tag>
-        </p>
-        <p class="text ">
-          <van-icon name="star" color="yellow"/>
-          {{item.score}}
-          月销售量：50
-        </p>
-        <p class='price'>￥{{item.price}}</p>
-      </van-grid-item>
-    </van-grid>
+    <scroll-view scroll-x="true" style="height:180px;" @scrolltoupper="upper" @scrolltolower="lower" @scroll="scroll">
+      <van-grid column-num="2">
+        <van-grid-item
+          use-slot
+          v-for="(item, idx) in goodList" :key="idx"
+          link-type="navigateTo"
+          url="/pages/products/main?index=${item.index}"
+        >
+          <img
+            style="width: 100%; height: 90px;"
+            v-bind:src="item.fileIds"
+          />
+          <p class="title">{{item.goodName}}
+            <van-tag plain color="#2bb0a6">{{item.category}}</van-tag>
+          </p>
+          <p class="text ">
+            <van-icon name="star" color="yellow"/>
+            {{item.score}}
+            月销售量：50
+          </p>
+          <p class='price'>
+            ￥{{item.price}}
+            <text class='origin-price'>￥{{item.price}}</text>
+          </p>
 
-    <!--猜你喜欢，商品列表-->
+
+        </van-grid-item>
+      </van-grid>
+    </scroll-view>
+    <!--附近商家-->
     <view>
       <dl class="ub-box ub-col z-margin-top-6-px z-padding-all-8-px" style="background:#fff">
         <p class="z-width-100-percent ub-box ub-ver" style="border-bottom:1px solid #eee">
@@ -115,7 +138,7 @@
 <script>
 
   export default {
-    computed: {
+    computed: {},
       onReady: function () {
         this.getGoodList()
       },
@@ -150,7 +173,6 @@
       //     })
       // },
 
-    },
     data () {
       return {
         imgUrls: [
@@ -164,9 +186,28 @@
         category: [],//分类数组
         selectedCategory: '全部', //当前选中的分类ID，页面加载时默认选中的全部分类
         keyword: '',
+        time: 30 * 60 * 60 * 1000,
+        timeData: {},
       }
     },
     methods: {
+      //限时打折
+      onChangeTime (e) {
+        this.timeData = e.mp.detail
+      },
+
+
+      upper (e) {
+        console.log(e)
+      },
+
+      lower (e) {
+        console.log(e)
+      },
+
+      scroll (e) {
+        console.log(e)
+      },
 //       测试下载图片
 //       get () {
 //         wx.cloud.downloadFile({
@@ -303,9 +344,27 @@
     font-size: 18px;
   }
 
+  .origin-price {
+    font-size: 16px;
+    padding-top: 2px;
+    line-height: 20px;
+    color: #555555 !important;
+    text-decoration: line-through;
+  }
+
   .text {
     font-size: 14px;
   }
 
+  .item {
+    display: inline-block;
+    width: 22px;
+    margin-right: 5px;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    background-color: #ff2026;
+    border-radius: 2px;
+  }
 
 </style>

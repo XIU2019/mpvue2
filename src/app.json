@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/index/main",
     "pages/orderDetail/main",
     "pages/onSubmitOder/main",
     "pages/products/main",
@@ -8,7 +9,6 @@
     "pages/orderMessage/main",
     "pages/updateAddress/main",
     "pages/addAddress/main",
-    "pages/index/main",
     "pages/login/main",
     "pages/my/main",
     "pages/manage/main",
@@ -84,7 +84,8 @@
     "van-area": "./static/vant/area/index",
     "van-picker": "./static/vant/picker/index",
     "van-datetime-picker": "./static/vant/datetime-picker/index",
-    "van-steps": "./static/vant/steps/index"
+    "van-steps": "./static/vant/steps/index",
+     "van-count-down": "./static/vant/count-down/index"
   },
   "expo": {
   },

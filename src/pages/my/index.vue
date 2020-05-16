@@ -29,10 +29,10 @@
       <!--        完善个人资料-->
       <div class="main">
         <van-cell
-          icon="edit"
+          icon="phone-o"
           is-link
-          title="完善个人资料"
-          link-type="switchTab"
+          title="修改手机号码"
+          link-type="navigateTo"
           url="/pages/orderList/main"
         />
         <!--        订单-->
@@ -40,7 +40,7 @@
           icon="shop-o"
           is-link
           title="我的订单"
-          link-type="switchTab"
+         link-type="navigateTo"
           url="/pages/orderList/main"
         />
         <!--        我的地址-->
@@ -48,23 +48,31 @@
           icon="location-o"
           is-link
           title="我的地址"
-          link-type="switchTab"
-          url="/pages/orderList/main"
+          link-type="navigateTo"
+          url="/pages/address/main"
         />
         <!--        我的评价-->
         <van-cell
           icon="records"
           is-link
           title="我的评价"
-          link-type="switchTab"
+          link-type="navigateTo"
           url="/pages/orderList/main"
         />
-        <!--联系卖家-->
+         <!--        我的钱包-->
         <van-cell
-          icon="phone-o"
+          icon="balance-o"
           is-link
-          title="联系卖家"
-          link-type="switchTab"
+          title="我的钱包"
+          link-type="navigateTo"
+          url="/pages/orderList/main"
+        />
+        <!--客服中心-->
+        <van-cell
+          icon="service-o"
+          is-link
+          title="客服中心"
+        link-type="navigateTo"
           url="/pages/orderList/main"
         />
         <!--        退出登录-->
