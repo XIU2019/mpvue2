@@ -20,7 +20,7 @@
             v-bind:value="message"
             type="textarea"
             placeholder="无接触配送，将商品挂在门口或者放前台"
-            v-bind:autosize=" autosize"
+            v-bind:autosize="autosize1"
             v-bind:border="false "
             @change="onChangeMessage"
           />
@@ -84,7 +84,7 @@
 
         ],
         value: [],
-        autosize: {maxHeight: 200, minHeight: 100},
+        autosize1:{maxHeight: 200, minHeight: 100},
         message: '',
       }
     },

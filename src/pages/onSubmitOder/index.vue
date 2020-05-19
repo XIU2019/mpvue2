@@ -56,7 +56,7 @@
             <van-cell title="包装费" v-bind:value="totalNum"/>
             <van-cell title="配送费" value="￥1"/>
             <van-cell title="小计" v-bind:value="'￥'+totalMoney"/>
-            <van-cell title="支付方式" value="线上支付"/>
+            <van-cell title="支付方式" value="线下支付"/>
             <van-cell title="备注" is-link v-bind:value="message" link-type="navigateTo"
                       url="/pages/orderMessage/main"/>
           </van-cell-group>
@@ -347,6 +347,7 @@
         db.collection('orderAdmit').add({
           data:
             {
+              orderId:that.order_id,
               userName: that.selectedAddressInfo[0].userName,
               phone: that.selectedAddressInfo[0].phone,
               addressCity: that.selectedAddressInfo[0].addressCity,
@@ -372,7 +373,6 @@
       //提交按钮
       onSubmit: function () {
         var that = this
-
         that.addOder()
         that.orderAdmit()
         Dialog.confirm({
@@ -381,10 +381,10 @@
         })
           .then((res) => {
             // on confirm
-            // 页面提示支付中
-            wx.showLoading({
-              title: '支付中',
-            })
+            // // 页面提示支付中
+            // wx.showLoading({
+            //   title: '支付中',
+            // })
             const db = wx.cloud.database()
             //更新order表中的状态
             db.collection('order').doc(that.order_id)
@@ -414,7 +414,7 @@
               //   title: '支付成功',
               // })
                 // 转到订单详情
-            wx.navigateTo({
+            wx.redirectTo({
               url: `/pages/orderDetail/main?order_id=${that.order_id}&orderAdmit_id=${that.orderAdmit_id}`,
             })
             })

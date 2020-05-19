@@ -183,11 +183,7 @@
               success: res => {
                 // 返回文件 ID
                 console.log(res.fileID)
-                // let fileId = [];
-                that.fileIds = that.fileIds.concat(res.fileID)
-                // that.setData({
-                //   fileIds: that.data.fileIds.concat(res.fileID)
-                // })
+                that.fileIds = that.fileIds.push(res.fileID)
                 console.log(that.fileIds)
                 reslove()
               },

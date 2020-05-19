@@ -85,11 +85,11 @@
           url="/pages/products/main?index=${item.index}"
         >
           <img
-            style="width: 100%; height: 90px;"
+            style="width: 100%; height: 80px;"
             v-bind:src="item.fileIds"
           />
           <p class="title">{{item.goodName}}
-            <van-tag plain color="#2bb0a6">{{item.category}}</van-tag>
+            <van-tag plain color="#FF2620">{{item.category}}</van-tag>
           </p>
           <p class="text ">
             <van-icon name="star" color="yellow"/>
@@ -107,11 +107,11 @@
     </scroll-view>
     <!--附近商家-->
     <view>
-      <dl class="ub-box ub-col z-margin-top-6-px z-padding-all-8-px" style="background:#fff">
+<!--      <dl class="ub-box ub-col z-margin-top-6-px z-padding-all-8-px" style="background:#fff">-->
         <p class="z-width-100-percent ub-box ub-ver" style="border-bottom:1px solid #eee">
           <span class="z-font-size-12 z-color-888 z-lineHeight-36">—附近商家—</span>
         </p>
-      </dl>
+<!--      </dl>-->
     </view>
 
     <!--   常规的商品卡片  -->

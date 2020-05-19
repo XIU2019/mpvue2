@@ -2,11 +2,13 @@
   <view class="contain">
     <view class="go">
       <!--             <button  v-on:click="goHome">{{content}}</button>-->
-      <van-button type="info" v-on:click="goHome">{{content}}</van-button>
+<!--      <van-button type="info" v-on:click="goHome">{{content}}</van-button>-->
+      <van-button type="danger" color="#FF374D" size="small" v-on:click="goHome">{{content}}</van-button>
+
     </view>
     <view>
 
-      <img class="bg" :src="img" alt=""/>
+      <img class="bg" v-bind:src="img" alt=""/>
     </view>
   </view>
 </template>
@@ -14,7 +16,7 @@
   export default {
     data () {
       return {
-        img: 'http://p0.meituan.net/codeman/a97baf515235f4c5a2b1323a741e577185048.jpg',
+        img: '/static/images/go.jpg',
         totalTime: 3,
         content: '跳过',
         canClick: true,
@@ -103,7 +105,7 @@
   .go {
     position: absolute;
     right: 30px;
-    top: 150px;
+    top: 10px;
     z-index: 9;
   }
 

@@ -1,9 +1,13 @@
 {
   "pages": [
-    "pages/index/main",
+     "pages/oderList/main",
+       "pages/index/main",
+    "pages/products/main",
+
+    "pages/comment/main",
     "pages/orderDetail/main",
     "pages/onSubmitOder/main",
-    "pages/products/main",
+    "pages/go/main",
     "pages/address/main",
     "pages/search/main",
     "pages/orderMessage/main",
@@ -11,9 +15,7 @@
     "pages/addAddress/main",
     "pages/login/main",
     "pages/my/main",
-    "pages/manage/main",
-    "pages/go/main",
-    "pages/oderList/main"
+    "pages/manage/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -24,19 +26,19 @@
   "tabBar": {
     "borderStyle": "white",
     "backgroundColor": "#fff",
-    "selectedColor": "#015478",
+    "selectedColor": "#d81e06",
     "color": "#666",
     "list": [
       {
         "pagePath": "pages/index/main",
         "iconPath": "static/images/tab1.png",
-        "selectedIconPath": "static/images/tab1-s.png",
+        "selectedIconPath": "static/images/home.png",
         "text": "首页"
       },
       {
         "pagePath": "pages/oderList/main",
         "selectedIconPath": "static/images/tab2-s.png",
-        "iconPath": "static/images/tab2.png",
+        "iconPath": "static/images/tab2-o.png",
         "text": "订单"
       },
       {
@@ -85,7 +87,8 @@
     "van-picker": "./static/vant/picker/index",
     "van-datetime-picker": "./static/vant/datetime-picker/index",
     "van-steps": "./static/vant/steps/index",
-     "van-count-down": "./static/vant/count-down/index"
+    "van-count-down": "./static/vant/count-down/index",
+    "van-panel": "./static/vant/panel/index"
   },
   "expo": {
   },
