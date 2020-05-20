@@ -17,8 +17,17 @@ export function formatTime (date) {
 
   return `${t1} ${t2}`
 }
+export function formatDate (date) {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
 
+  const t3 = [year, month, day].map(formatNumber).join('/')
+
+  return `${t3} `
+}
 export default {
   formatNumber,
-  formatTime
+  formatTime,
+  formatDate,
 }

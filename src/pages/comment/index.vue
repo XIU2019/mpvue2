@@ -62,12 +62,16 @@
 </template>
 
 <script>
+  import {formatDate} from '../../utils'
+
   export default {
     computed: {},
     onLoad: function (e) {
       console.log(e.id)
       Object.assign(this.$data, this.$options.data())//用于重新定义data的数据
       this.orderId = e.id
+      var util = require('../../utils/index.js')
+      this.nowDate = util.formatDate(new Date())
     },
     onShow: function () {
 
@@ -83,6 +87,8 @@
         images: [],
         fileIds: [],
         orderId: '',
+        selectedCategory: '待评价',
+         nowDate :'',
       }
     },
     methods: {
@@ -155,6 +161,7 @@
               orderId: that.orderId,
               // movieid:that.movieid,
               fileIds: that.fileIds,
+              commentTime:that.nowDate,
             }
           }).then(res => {
             console.log(res)
@@ -162,8 +169,12 @@
             wx.showToast({
               title: '评价成功',
             })
-          //  修改订单的售后状态
-
+            //  修改订单的售后状态
+            that.updateStatus()
+            // 转到订单详情
+            wx.switchTab({
+              url: '/pages/oderList/main',
+            })
           })
             .catch(err => {
               wx.hideLoading()
@@ -173,6 +184,32 @@
             })
         })
 
+      },
+      //  修改订单的售后状态
+      updateStatus () {
+        const db = wx.cloud.database()
+        db.collection('order').doc(this.orderId).update({
+          data: {
+            serviceStatus: '已评价'
+          }
+        }).then(res => {
+          console.log(res)
+        })
+          .catch(err => {
+            console.log(err)
+          })
+        db.collection('orderAdmit').where(
+          {data: {orderId: this.orderId}})
+          .update({
+          data: {
+            serviceStatus: '已评价'
+          }
+        }).then(res => {
+          console.log(res)
+        })
+          .catch(err => {
+            console.log(err)
+          })
       },
     },
   }

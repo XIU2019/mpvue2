@@ -20,7 +20,7 @@
             v-bind:value="message"
             type="textarea"
             placeholder="无接触配送，将商品挂在门口或者放前台"
-            v-bind:autosize="autosize1"
+            autosize="{maxHeight: 200, minHeight: 100}"
             v-bind:border="false "
             @change="onChangeMessage"
           />
@@ -109,6 +109,8 @@
           url: `/pages/onSubmitOder/main?message=${message}`
         })
         },
+
+
       },
     }
 </script>

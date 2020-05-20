@@ -31,8 +31,9 @@
             </van-cell>
             <van-cell>
               <van-row>
-                <!--             <van-button type="default" size="small">再来一单</van-button>-->
-                <van-button type="default" size="small">再来一单</van-button>
+                <van-button type="default" size="small" @click="goDetail(item._id)">订单详情</van-button>
+<!--                <van-button type="default" size="small" @click="goDetail>-->
+                  <van-button type="default" size="small" @click="goProducts">再来一单</van-button>
                 </van-col>
                 </van-col>
               </van-row>
@@ -77,25 +78,25 @@
             </van-cell>
           </view>
         </van-tab>
-        <van-tab title="退款">内容 2</van-tab>
+        <van-tab title="退款">目前还没有退款订单哦</van-tab>
       </van-tabs>
     </div>
-
-
   </div>
 </template>
 
 <script>
   export default {
     computed: {},
-    onLoad () {
+    onLoad (e) {
       this.getOrderList()
+      Object.assign(this.$data, this.$options.data())
+
     },
     data () {
       return {
         title: '标题',
         desc: '描述信息',
-        status: '状态',
+        status: '',
         selectedCategory: '全部',
         orderList: [],
         goodList: [],
@@ -106,10 +107,24 @@
       onChange (event) {
         console.log(event.mp.detail.title)
         this.selectedCategory = event.mp.detail.title
+         this.getOrderList ()
         //      wx.showToast({
         //   title: `点击标签 ${event.detail.title}`,
         //   icon: 'none',
         // });
+      },
+      //去详情页
+      goDetail(id){
+        console.log(id)
+          wx.redirectTo({
+              url: `/pages/orderDetail/main?order_id=${id}`,
+            })
+      },
+      //再来一单
+      goProducts(){
+        wx.switchTab({
+          url: '/pages/index/main',
+        })
       },
       //去评价
       goComment (id) {
@@ -134,7 +149,7 @@
             })
         } else if (that.selectedCategory !== '全部' && that.selectedCategory !== '') {
           order.where({
-            category: that.selectedCategory,
+            serviceStatus: that.selectedCategory,
           })
             .get().then(res => {
             console.log(res)

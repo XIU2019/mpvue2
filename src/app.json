@@ -1,10 +1,9 @@
 {
   "pages": [
-     "pages/oderList/main",
-       "pages/index/main",
-    "pages/products/main",
-
-    "pages/comment/main",
+      "pages/oderList/main",
+        "pages/comment/main",
+       "pages/products/main",
+    "pages/index/main",
     "pages/orderDetail/main",
     "pages/onSubmitOder/main",
     "pages/go/main",
@@ -88,7 +87,8 @@
     "van-datetime-picker": "./static/vant/datetime-picker/index",
     "van-steps": "./static/vant/steps/index",
     "van-count-down": "./static/vant/count-down/index",
-    "van-panel": "./static/vant/panel/index"
+    "van-panel": "./static/vant/panel/index",
+     "van-divider": "./static/vant/divider/index"
   },
   "expo": {
   },

@@ -66,50 +66,78 @@
               </view>
             </van-tree-select>
           </view>
+          <!--    商品导航-->
+          <view>
+            <van-submit-bar
+              v-bind:price="totalPrice"
+              button-text="提交订单"
+              @submit="onClickButton"
+              v-bind:tip="true">
+
+              <van-icon name="shopping-cart-o" v-bind:info="carts.length" size="25px" @click="showPopup"/>
+              <view slot="tip">
+                <view>
+                  {{cartTipText}}
+                </view>
+              </view>
+            </van-submit-bar>
+          </view>
         </van-tab>
 
         <van-tab title="评价">
           <!--        评价布局-->
-          <div>
-            <text>
-              购物车
-            </text>
+          <view>
+            <van-cell>
+              <van-row>
+                <van-col span="6" v-for="(item,index) in tags" :key="index">
+                  <van-tag plain size="large" v-if="!item.selected" @click="onClickTag(item.id)">{{item.value}}
+                  </van-tag>
+                  <van-tag color="#ff4d37" v-else size="large" @click="onClickTag(item.id)">{{item.value}}</van-tag>
+                </van-col>
+              </van-row>
+            </van-cell>
+          </view>
+          <view class="main1 ">
+            <view v-for="(item, idx) in commentList" :key="idx">
+              <van-cell v-bind:value="item.commentTime" icon="user-o">
+                <view slot="title">
+                  <view class="van-cell-text">匿名用户
+                    <van-rate readonly size="10px" v-bind:value="item.score" @change="onChange"/>
+                  </view>
+                </view>
+              </van-cell>
+              <van-cell>
+                <van-row>
+                  <van-col>
+                    人均 ￥: {{item.per_cost}}
+                  </van-col>
+                </van-row>
+              </van-cell>
+              <van-cell>
+                <van-row>
+                  <van-col>评价内容：{{item.content}}</van-col>
+                </van-row>
+                <van-row>
+                  <van-grid column-num="3">
+                    <van-grid-item use-slot v-for="(item, index) in item.fileIds" :key="index">
+                      <!--                    <view slot="icon">-->
+                      <img
+                        style="width:80px; height: 80px;"
+                        v-bind:src="item"
+                      />
+                      <!--                    </view>-->
+                    </van-grid-item>
+                  </van-grid>
+                </van-row>
+              </van-cell>
 
-          </div>
+            </view>
+          </view>
+
         </van-tab>
       </van-tabs>
     </view>
-    <!--    商品导航-->
-    <view>
-      <!--      <van-goods-action>-->
-      <!--        <van-goods-action-icon-->
-      <!--          icon="cart-o"-->
-      <!--          text="购物车"-->
-      <!--          bind:click="onClickIcon"-->
-      <!--          v-bind:info="cart.length"-->
-      <!--          @click="showPopup"-->
-      <!--        />-->
-      <!--        <view>-->
-      <!--          总计：-->
-      <!--        </view>-->
-      <!--        <view class="shoppingCart">-->
-      <!--          <van-button type="warning" color="linear-gradient(90deg,#ff6034,#ee0a24)">去结算</van-button>-->
-      <!--        </view>-->
-      <!--      </van-goods-action>-->
-      <van-submit-bar
-        v-bind:price="totalPrice"
-        button-text="提交订单"
-        @submit="onClickButton"
-        v-bind:tip="true">
 
-        <van-icon name="shopping-cart-o" v-bind:info="carts.length" size="25px" @click="showPopup"/>
-        <view slot="tip">
-          <view>
-            {{cartTipText}}
-          </view>
-        </view>
-      </van-submit-bar>
-    </view>
     <!--    购物车弹出框   遮盖层-->
     <view>
       <van-popup
@@ -118,7 +146,6 @@
         custom-style="height: 90%;"
         @close="onClose">
         <!--        购物车内容-->
-
         <view class="cartContainer carts-list ">
           <div class="cart_top">
             <div class="cartTop_titile">
@@ -127,10 +154,7 @@
             <div class="cartTop_delected ">
               <van-icon name="delete" size="13px" @click="deleteCartList"/>
               <text @click="deleteCartList"> 清空购物车</text>
-
             </div>
-
-
           </div>
           <view class="carts-container" v-for="(item, idx) in carts"
                 :key="idx"
@@ -139,13 +163,6 @@
             <!--            <van-checkbox-group v-bind:value=" result" @change=" onChangeValue($event)">-->
             <van-cell-group>
               <van-cell>
-                <!--                  v-for="(item, idx) in carts"-->
-                <!--                  :key="idx"-->
-                <!--                  clickable-->
-                <!--                  v-bind:data-index="index">-->
-                <!--                                                              @click="toggle">-->
-                <!--                     常规的商品卡片gg  -->
-                <!--                  <van-checkbox  v-bind:value="checked1" v-bind:name="item._id" v-bind:id="item._id" checked-color="#FF2426" v-on:click.stop="onChangeSelect(item._id,$event)"/>-->
                 <div class="shoppingCart ">
                   <van-icon v-if="item.selected" size="23px" color="red" name="passed"
                             @click="onChangeSelected(item._id)"
@@ -178,29 +195,10 @@
                 </van-card>
               </van-cell>
             </van-cell-group>
-            <!--            </van-checkbox-group>-->
-
           </view>
         </view>
         <!--        底部-->
         <view>
-          <!--          <van-goods-action>-->
-          <!--            <van-goods-action-icon-->
-          <!--              icon="cart-o"-->
-          <!--              text="购物车"-->
-          <!--              bind:click="onClickIcon"-->
-          <!--              v-bind:info="cart.length"-->
-          <!--              @click="showPopup"-->
-          <!--            />-->
-          <!--            <view class="shoppingCart">-->
-          <!--              <van-button type="warning" color="linear-gradient(90deg,#ff6034,#ee0a24)">去结算</van-button>-->
-          <!--            </view>-->
-          <!--          </van-goods-action>-->
-          <!--          <van-submit-bar-->
-          <!--            v-bind:price="3050 "-->
-          <!--            button-text="去结算"-->
-          <!--            @submit="onSubmit"-->
-          <!--          />-->
           <van-submit-bar
             v-bind:price="totalPrice"
             button-text="提交订单"
@@ -247,6 +245,7 @@
       this.getTotalPrice()
       this.initCarts()
       this.getGoodList()
+      this.getComment()
     },
 
     /**
@@ -261,6 +260,31 @@
 
     data () {
       return {
+        commentImages: [],//评价图片
+        tags: [
+          {
+            id: 0,
+            value: '全部',
+            selected: true,
+          },
+          {
+            id: 1,
+            value: '有图',
+            selected: false,
+          },
+          {
+            id: 2,
+            value: '好评',
+            selected: false,
+          },
+          {
+            id: 3,
+            value: '差评',
+            selected: false,
+          },
+        ],
+        value: '全部',//点击评价的标签值
+        commentList: [],//评价列表
         checked1: true,
         selectAllStatus: true,   //全选复选框的勾选状态
         isAdd: false,
@@ -318,12 +342,45 @@
               carts = [...carts]
             }
           })
-          // console.log('carts',carts);
-          // carts.map(item => {
-          //   item.num = 1
-          // })
-          // console.log('carts', carts)
           this.carts = carts
+        }
+      },
+
+      onClickTag (id) {
+        // console.log(id)
+        const index = this.tags.findIndex(item => item.id === id)
+        const selected = this.tags[index].selected
+        this.tags[index].selected = !selected
+        this.$set(this.tags, index, this.tags[index])
+        this.value = this.tags[index].value
+        this.getComment()
+      },
+      getComment () {
+        const that = this
+        const db = wx.cloud.database()
+        const comment = db.collection('comment')
+        if (that.value === '全部') {
+          comment.get().then(res => {
+            console.log(res)
+            that.commentList = [],
+              that.commentList = that.commentList.concat(res.data)
+            that.commentImages = that.commentList.fileIds
+          })
+            .catch(err => {
+              console.log(err)
+            })
+        } else if (that.value !== '全部' && that.value !== '') {
+          comment.where({
+            category: that.selectedCategory,
+          })
+            .get().then(res => {
+            console.log(res)
+            that.commentList = [],
+              that.commentList = that.commentList.concat(res.data)
+          })
+            .catch(err => {
+              console.log(err)
+            })
         }
       },
       //   用户点击 导航
@@ -334,7 +391,6 @@
           icon: 'none'
         })
       },
-
       onClickNav (event) {
         console.log(event.mp.detail.index)
         this.mainActiveIndex = event.mp.detail.index
@@ -365,7 +421,6 @@
         this.activeId = clickActiveId
         console.log('activeId:', this.activeId)
       },
-
       //     获取列表
       getGoodList () {
         const that = this
@@ -376,9 +431,7 @@
             console.log(res)
             that.goodList = [],
               that.goodList = that.goodList.concat(res.data)
-            // that.category = that.goodList.item.category
             console.log('goodList:', that.goodList)
-            // console.log('category:', that.category)   //打印分类
           })
             .catch(err => {
               console.log(err)
@@ -399,18 +452,12 @@
         }
       },
 
-      //  底部的商品导航
-      // onClickIcon () {
-      //   Toast('点击图标')
-      // },
 //  提交订单按钮
-
       onClickButton () {
         wx.navigateTo({
           url: '/pages/onSubmitOder/main'
         })
       },
-
       showPopup () {
         this.show = true
         this.initCarts()
@@ -482,6 +529,12 @@
         const index = this.carts.findIndex(item => item._id === data._id)
         this.carts[index].num = data.num
         this.$set(this.carts, index, this.carts[index])
+        this.getTotalPrice()
+        //更新本地缓存
+        wx.setStorage({
+          key: 'cart',
+          data: this.cart,
+        })
       },
       //添加商品
       addNum (data) {
@@ -490,7 +543,12 @@
         const index = this.carts.findIndex(item => item._id === data._id)
         this.carts[index].num = data.num
         this.$set(this.carts, index, this.carts[index])
-
+        this.getTotalPrice()
+        //更新本地缓存
+        wx.setStorage({
+          key: 'cart',
+          data: this.cart,
+        })
       },
 
       onChangeSelect (id, event) {
@@ -516,7 +574,7 @@
         let num = 0
         for (let i = 0; i < carts.length; i++) {         // 循环列表得到每个数据
           if (carts[i].selected) {
-            num=carts[i].num+num;// 判断选中才会计算价格
+            num = carts[i].num + num// 判断选中才会计算价格
             total += carts[i].num * carts[i].price     // 所有价格加起来
           }
         }
@@ -660,6 +718,13 @@
     font-size: 18px;
     color: #444;
     line-height: 38px;
+  }
+
+  .main1 {
+    width: 100%;
+    height: 400px;
+    background: #ffffff;
+    margin: 10px auto;
   }
 
   .A {

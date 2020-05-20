@@ -119,10 +119,10 @@
       this.getOrderList()
     },
     onReady () {
-
+ this.getOrderList()
     },
     onShow () {
-
+ this.getOrderList()
     },
     data () {
       return {
@@ -195,8 +195,8 @@
         })
       },
       goProduct () {
-        wx.navigateTo({
-          url: '/pages/products/main',
+        wx.switchTab({
+          url: '/pages/index/main',
         })
       },
       cancelOrder () {

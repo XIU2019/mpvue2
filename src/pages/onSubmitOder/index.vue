@@ -168,7 +168,7 @@
         show: false,//地址弹出层
         flat: true,//是否选择了地址
         addressInfo: [],
-        selectedAddressInfo: [],
+        selectedAddressInfo: [],//选择的地址信息
         showTime: false,//时间弹出窗口
         time: '',//渲染的时间数据
         currentDate: '12:00',
@@ -266,6 +266,13 @@
         })
 
       },
+      //初始化缓存
+      // initOrderInfo(){
+      //    var value = wx.getStorageSync('cart')
+      //   if (value) {
+      // },
+
+
       //计算总价
       getTotalPrice () {
         let carts = this.carts                 // 获取购物车列表
@@ -331,6 +338,7 @@
               payment: '在线支付',
               paymentStatus: '待支付',
               orderStatus: '待支付',
+              serviceStatus:'待评价',
             }
         }).then(res => {
           console.log(res)
@@ -404,6 +412,7 @@
             db.collection('orderAdmit').doc(that.orderAdmit_id)
               .update({
                   data: {
+                     orderId:that.order_id,
                     paymentStatus: '已支付',
                     orderStatus: '等待接单',
                   }
