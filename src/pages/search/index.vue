@@ -1,35 +1,44 @@
 <template>
-  <div>
-    <van-search
-      :value="keyword"
-      placeholder="请输入搜索关键词"
-      use-action-slot
-      @change="onChange"
-      @search="onSearch"
-    >
-      <view slot="action" @tap="onClick">搜索</view>
-    </van-search>
-    <van-cell
-      title="单元格"
-      value="内容"
-      title-class="cell-title"
-      value-class="cell-value"
-    />
-    <van-cell title="展示弹出层" is-link @click="showPopup"/>
+  <view class="body ">
+    <view class="top">
+      <van-search
+        :value="inputVal"
+        placeholder="请输入搜索关键词"
+        use-action-slot
+        @change="onChange"
+        @search="onSearch"
+        @focus="inputFocus"
+        @blur="inputBlur"
+        @clear="clearInput"
 
-    <van-popup
-      v-bind:show="show"
-      position="bottom"
-      custom-style="height: 20%;"
-      @close="onClose">
-      gfhgfh
-    </van-popup>
-  <view>
-    {{nowDate}}
+      >
+        <view slot="action" @tap="onClickSearchButton">搜索</view>
+      </van-search>
+    </view>
+    <!--  当输入框中有内容，且输入框聚焦时显示 联想词列表 -->
+    <view v-show="inputVal.length>0">
+      联想词列表
+    </view>
+    <!--    输入框中无内容显示-->
+    <!--    <view class="main">-->
+
+    <!--    </view>-->
+    <view v-show="inputVal.length<= 0 || !inputFocused" >
+      <!--       历史搜索记录栏-->
+      <view class="box1">
+        热门搜索词栏
+      </view>
+      <!--      热门搜索词栏-->
+      <view class="box2">
+        热门搜索词栏
+      </view>
+    </view>
+    <!-- 当输入框中有内容，且输入框未聚焦时显示搜索结果栏 -->
+    <view v-show="inputVal.length>0">
+      搜索结果栏
+    </view>
+
   </view>
-
-    </div>
-
 
 
 </template>
@@ -38,131 +47,87 @@
 
 
   export default {
+    computed: {
 
-    computed: {},
-onLoad(){
-       var util = require('../../utils/index.js')
-       this.nowDate=util.formatTime(new Date())
-},
+    },
+    onLoad () {
+
+    },
     data () {
       return {
-         nowDate:'',
-        keyword: '',
-        show: false,
-        active: 1,
-        isAuth: false,
-        //  测试
-        mainActiveIndex: 0,
-        activeId: [],
-        max: 2,
-        items: [{
-          // 导航名称
-          text: '所有城市',
-          disabled: false,
-          children: [
-            // {
-            //   text: '温州',
-            //   id: 1,
-            // },
-            // {
-            //   text: '杭州',
-            //   id: 2
-            // }
-          ]
-        }],
-
-        //  复选框
-        test: ['a', 'b', 'c'],
-        result: ['a','b'],
-          carts:[
-            {id:1,title:'新鲜芹菜 半斤',image:'http://p1.meituan.net/codeman/826a5ed09dab49af658c34624d75491861404.jpg',num:4,price:0.01,selected:true},
-            {id:2,title:'素米 500g',image:'http://p1.meituan.net/codeman/826a5ed09dab49af658c34624d75491861404.jpg',num:1,price:0.03,selected:true}
-          ]
-
+        inputVal: '', //用户输入的搜索内容
+        searchedKeywords: [], //搜索历史记录
+        hotSearchProducts: [], //热搜产品关键词
+        suggestKeywords: [], //搜索联想关键词
+        // isNoMoreData: false, //记录是否已加载完所有分页数据
+        inputFocused: false, //是否焦点在搜索输入框
+        value: true,
       }
     },
 
     methods: {
-      showPopup () {
-        this.show = true
-      },
-
-      onClose () {
-        this.show = false
-      },
-      authorize () {
-        this.isAuth = true
-      },
-
-      //  tree
-      onClickNav (event) {
-        console.log(event.mp.detail.index)
-        this.mainActiveIndex = event.mp.detail.index
-        console.log('mainActiveIndex:', this.mainActiveIndex)
-      },
-
-      onItemClick (event) {
-        const clickActiveId = []
-        this.clickActiveId = event.mp.detail
-
-        const index = clickActiveId.indexOf(event.mp.detail.id)
-        if (index > -1) {
-          clickActiveId.splice(index, 1)
-        } else {
-          clickActiveId.push(event.mp.detail.id)
+      onChange (event) {
+        if (event.mp.detail) {
+          this.inputVal = event.mp.detail
+          // console.log(this.inputVal.length)
         }
-        this.activeId = this.clickActiveId
+      },
+      onClick () {
+
+      },
+      //输入框聚焦，设置输入框是否聚焦的标志为 true，根据输入框中的关键词刷新联想关键词数组
+      inputFocus () {
+
+      },
+      //输入框失去焦点事件，设置输入框是否聚焦的标志为 false
+      inputBlur () {
+
+      },
+      /**
+       * 清空搜索框内容按钮点击事件：清空用户输入关键词和联想关键词数组
+       */
+      clearInput: function () {
+
       },
 
-      onClick (event) {
-        console.log(event.mp.detail)
-      },
-
-      OnClickTreeItemAd (event, detail = {}) {
-        console.log(event.mp.detail)
-        let activeId1 = []
-        // const { activeId } = this.event.mp.detail;
-        this.activeId1 = event.mp.detail
-        const index = activeId1.indexOf(detail.id)
-        if (index > -1) {
-          activeId1.splice(index, 1)
-        } else {
-          activeId1.push(detail.id)
+      // 输入框键盘输入事件：记录用户输入关键词，根据输入框中的关键词刷新联想关键词数组
+      onSearch: function (e) {
+        if (e.mp.detail) {
+          this.inputVal = e.mp.detail
+          // console.log(this.inputVal.length)
         }
-        console.log('activeId1:', this.activeId1)
-        this.activeId = this.activeId1
-        console.log('activeId:', this.activeId)
-      },
-      //复选框
-      onChange1 (event) {
-
-        this.result = event.mp.detail
-
-        console.log(this.result)
 
       },
-      //数组测试set结构和map
-      onClickTest () {
 
+      //
+      // 搜索按钮点击事件：在历史搜索关键词列表中添加当前用户输入关键词，
+      // 并在子部件 4 中显示商品标题包含用户输入关键词的搜索结果列表
+      //
+      onClickSearchButton () {
 
       },
- onChange2(event) {
-
-      this.result=event.detail
-
-  },
-
- toggle(event) {
-        const {name} = event.mp.currentTarget.dataset;
-        console.log(event.mp.currentTarget.dataset);
-
-        // const box =this.$mp.page.selectComponent(`.checkboxes-${name}`)
-        // box.toggle()
+      /**
+       * 联想词列表中联想词点击事件：设置输入框内容为点击关键词，并触发搜索按钮点击事件
+       * 点击历史记录的标签、点击热门搜索标签的事件响应函数同样为该方法
+       */
+      onClickTags: function (e) {
+        this.inputVal = e.currentTarget.id
+        this.onClickSearchButton()
       },
+      /**
+       * 根据输入框中的关键词刷新联想关键词数组
+       */
+      refreshSuggestWords: function () {
+        //调用数据服务，从搜索联想词库获取搜索联想词
 
-  noop() {
+      },
+      /**
+       * 在历史搜索关键词列表中添加关键词
+       * 使用小程序官方提供的数据缓存 API 实现历史搜索关键词列表的读取与存储
+       */
+      addSearchedKeyword: function (text) {
 
-  },
+      },
     },
   }
 </script>
@@ -178,37 +143,43 @@ onLoad(){
     font-size: 12px !important;
   }
 
-  .icon-value {
-    width: 100px !important;;
-    height: 100px !important;
-    size: 100px
+  .body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
   }
 
-  .fade-leave-to {
-    opacity: 0;
-    transform: translate3d(0, 300px, 0);
+  .top {
+    height: 120px;
+    background: #0207c1;
   }
 
-  .fade-enter {
-    transform: translate3d(0, -300px, 0);
+  .box1{
+    width: 100%;
+    height: 300px;
+    background: #db4ad1;
+    margin: 10px auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .box2{
+    width: 100%;
+    height: 300px;
+    margin: 10px auto;
+    background: #0207c1;
   }
 
-  .fade-leave-active, .fade-enter-active {
-    transition: .5s all ease;
+  .foot {
+    width: 300px;
+    height: 100px;
+    background: #000900;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
   }
 
-  .value-class {
-    flex: none !important;
-  }
-  .van-swipe-cell__left,
-.van-swipe-cell__right {
-  display: inline-block;
-  width: 65px;
-  height: 44px;
-  font-size: 15px;
-  line-height: 44px;
-  color: #fff;
-  text-align: center;
-  background-color: #f44;
-}
 </style>

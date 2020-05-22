@@ -1,14 +1,14 @@
 {
   "pages": [
-      "pages/oderList/main",
-        "pages/comment/main",
-       "pages/products/main",
+    "pages/search/main",
+    "pages/oderList/main",
+    "pages/comment/main",
+    "pages/products/main",
     "pages/index/main",
     "pages/orderDetail/main",
     "pages/onSubmitOder/main",
     "pages/go/main",
     "pages/address/main",
-    "pages/search/main",
     "pages/orderMessage/main",
     "pages/updateAddress/main",
     "pages/addAddress/main",
@@ -88,7 +88,7 @@
     "van-steps": "./static/vant/steps/index",
     "van-count-down": "./static/vant/count-down/index",
     "van-panel": "./static/vant/panel/index",
-     "van-divider": "./static/vant/divider/index"
+    "van-divider": "./static/vant/divider/index"
   },
   "expo": {
   },
