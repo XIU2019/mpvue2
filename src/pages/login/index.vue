@@ -16,9 +16,9 @@
         <van-button block type="danger" @getuserinfo="getUserInfo"
                     open-type="getUserInfo">微信授权登录
         </van-button>
-        <text>
-
-        </text>
+        <a @click="admitLogin">
+          管理员登录入口
+        </a>
       </div>
     </div>
 
@@ -107,8 +107,8 @@
             wx.showToast({
               title: '登录成功',
             })
-           that. isLogin=false;
-            let isLogin=that.isLogin;
+            that.isLogin = false
+            let isLogin = that.isLogin
             wx.switchTab({
               url: '/pages/my/main?isLogin=false'
             })
@@ -125,8 +125,13 @@
         } else {
           this.openId = ''
         }
-      }
-
+      },
+      //管理员登录
+      admitLogin () {
+         wx.redirectTo({
+          url: '/pages/admitLogin/main'
+        })
+      },
     },
   }
 </script>

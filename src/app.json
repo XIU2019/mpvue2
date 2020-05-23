@@ -1,20 +1,23 @@
 {
   "pages": [
+    "pages/index/main",
+    "pages/admit/goodManage/main",
+    "pages/admit/admitIndex/main",
+    "pages/admitLogin/main",
+    "pages/my/main",
     "pages/search/main",
+    "pages/login/main",
+    "pages/manage/main",
     "pages/oderList/main",
     "pages/comment/main",
     "pages/products/main",
-    "pages/index/main",
     "pages/orderDetail/main",
     "pages/onSubmitOder/main",
     "pages/go/main",
     "pages/address/main",
     "pages/orderMessage/main",
     "pages/updateAddress/main",
-    "pages/addAddress/main",
-    "pages/login/main",
-    "pages/my/main",
-    "pages/manage/main"
+    "pages/addAddress/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -88,7 +91,8 @@
     "van-steps": "./static/vant/steps/index",
     "van-count-down": "./static/vant/count-down/index",
     "van-panel": "./static/vant/panel/index",
-    "van-divider": "./static/vant/divider/index"
+    "van-divider": "./static/vant/divider/index",
+    "van-notify": "./static/vant/notify/index"
   },
   "expo": {
   },
