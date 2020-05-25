@@ -5,7 +5,7 @@
     </div>
     <div class="top">
       <van-steps v-bind:steps="steps" v-bind:active="active" active-icon="success"
-                 active-color="#FF2620" desc-class="desc-class1" @clickStep="onchangeStep"/>
+                 active-color="#FF2620" desc-class="desc-class1" />
     </div>
     <div class="main">
       <scroll-view scroll-y="true" style="height: 100%;" @scrolltoupper="upper" @scrolltolower="lower" @scroll="scroll">
@@ -109,6 +109,7 @@
 </template>
 <script>
   export default {
+    computed: {},
     onLoad (e) {
       console.log(e)
       Object.assign(this.$data, this.$options.data())
@@ -117,12 +118,14 @@
       // 05f2c36f5ebbafbf00b779371e24a9d3
       // 982133855ebbafbf00a289942c1b73a0
       this.getOrderList()
+
     },
     onReady () {
- this.getOrderList()
+      this.getOrderList()
+
     },
     onShow () {
- this.getOrderList()
+      this.getOrderList()
     },
     data () {
       return {
@@ -152,6 +155,28 @@
       }
     },
     methods: {
+      // 监听订单状态
+      onStep () {
+        console.log('1', this.orderList.orderStatus)
+
+        if (this.orderList.orderStatus === '商家接单') {
+          this.active = 1
+          this.flat = false
+          this.message = '商家已接单，请耐心等待'
+          this.context = '再来一单'
+        } else if (this.orderList.orderStatus === '配送中') {
+           this.active = 2
+          this.flat = false
+          this.message = '商品配送中，请耐心等待'
+          this.context = '再来一单'
+        } else if (this.orderList.orderStatus === '订单完成') {
+           this.active = 3
+          this.flat = false
+          this.message = '订单已完成，去评价'
+          this.context = '再来一单'
+        }
+
+      },
       onchangeStep (event) {
         console.log(event.mp.detail)
         this.active = event.mp.detail
@@ -190,6 +215,7 @@
           console.log(res)
           that.orderList = res.data
           that.goodList = that.orderList.goodList
+          this.onStep()
         }).catch(err => {
           console.log(err)
         })

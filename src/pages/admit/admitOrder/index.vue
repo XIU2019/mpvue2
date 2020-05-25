@@ -6,7 +6,7 @@
           <view v-for="(item, idx) in orderList"
                 :key="idx">
             <van-cell
-              v-bind:value=" item.orderStatus" value-class="cell-value">
+              value=" 订单已完成" value-class="cell-value">
               <view slot="icon">
                 <van-image
                   width="30px"
@@ -28,18 +28,14 @@
               <van-row>
                 <van-col span="24"> 实付￥{{item.totalMoney}}</van-col>
               </van-row>
-              <van-row>
-                <van-col span="24" class="cell-value" @click="oderDetail(item._id)">查看详情</van-col>
-              </van-row>
             </van-cell>
             <van-cell>
               <van-row>
-                <van-toast id="van-toast"/>
-                <van-button type="default" size="small" @click="orderOver(item._id)">订单完成</van-button>
-                <!--                <van-button type="default" size="small" @click="goDetail>-->
-                <van-button type="default" size="small" @click="goProducts">再来一单</van-button>
-                <!--                </van-col>-->
-                <!--                </van-col>-->
+                <van-button type="default" size="small" @click="goDetail(item._id)">订单详情</van-button>
+<!--                <van-button type="default" size="small" @click="goDetail>-->
+                  <van-button type="default" size="small" @click="goProducts">再来一单</van-button>
+                </van-col>
+                </van-col>
               </van-row>
             </van-cell>
           </view>
@@ -71,7 +67,6 @@
               <van-row>
                 <van-col span="24"> 实付￥{{item.totalMoney}}</van-col>
               </van-row>
-
             </van-cell>
             <van-cell>
               <van-row>
@@ -90,8 +85,6 @@
 </template>
 
 <script>
-
-
   export default {
     computed: {},
     onLoad (e) {
@@ -114,22 +107,21 @@
       onChange (event) {
         console.log(event.mp.detail.title)
         this.selectedCategory = event.mp.detail.title
-        this.getOrderList()
+         this.getOrderList ()
         //      wx.showToast({
         //   title: `点击标签 ${event.detail.title}`,
         //   icon: 'none',
         // });
       },
       //去详情页
-      oderDetail (id) {
-        // console.log(id)
-        wx.redirectTo({
-          url: `/pages/orderDetail/main?order_id=${id}`,
-        })
+      goDetail(id){
+        console.log(id)
+          wx.redirectTo({
+              url: `/pages/orderDetail/main?order_id=${id}`,
+            })
       },
-
       //再来一单
-      goProducts () {
+      goProducts(){
         wx.switchTab({
           url: '/pages/index/main',
         })
@@ -168,16 +160,6 @@
             .catch(err => {
               console.log(err)
             })
-        }
-      },
-      //  订单完成
-      orderOver (id) {
-        console.log(id)
-        const index = this.orderList.findIndex(item => item.id === id)
-        if (this.orderList[index].orderStatus === '配送中') {
-
-        } else {
-
         }
       },
     },

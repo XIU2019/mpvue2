@@ -1,8 +1,9 @@
 {
   "pages": [
     "pages/index/main",
-    "pages/admit/goodManage/main",
+    "pages/admit/admitOrder/main",
     "pages/admit/admitIndex/main",
+    "pages/admit/goodManage/main",
     "pages/admitLogin/main",
     "pages/my/main",
     "pages/search/main",
@@ -93,8 +94,6 @@
     "van-panel": "./static/vant/panel/index",
     "van-divider": "./static/vant/divider/index",
     "van-notify": "./static/vant/notify/index"
-  },
-  "expo": {
   },
   "cloud": true
 }

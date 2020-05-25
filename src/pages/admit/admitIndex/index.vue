@@ -10,7 +10,7 @@
       </div>
       <div class="userName">
         <p class="userName" >
-          管理员XIU2020
+         商家XIU2020
         </p>
       </div>
       <div class="main">
