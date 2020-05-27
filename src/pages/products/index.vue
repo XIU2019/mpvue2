@@ -30,19 +30,19 @@
               <view slot="content">
                 <!--                <van-checkbox-group v-bind:value=" selectedGoodIndex" @change="onChangeAdd">-->
                 <van-cell-group>
-                  <van-cell
+                  <view
                     v-for="(item, idx) in goodList"
                     :key="idx"
-                    clickable
                     v-bind:data-index="index">
                     <!--                      @click="toggle"-->
                     <!--   常规的商品卡片  -->
                     <van-card
                       v-bind:value="item._id"
                       v-bind:tag="item.category"
+                      v-bind:origin-price="item.oprice"
                       v-bind:price="item.price"
-                      v-bind:desc="item.description"
                       v-bind:title="item.goodName"
+                      v-bind:desc="item.description"
                       v-bind:thumb="item.fileIds"
                       thumb-mode="aspectFit"
                     >
@@ -56,11 +56,9 @@
                         <!--                          </van-checkbox>-->
 
                         <van-icon name="add-o" color="red" size="23px" @click="onAddCart(item._id)"/>
-
-
                       </view>
                     </van-card>
-                  </van-cell>
+                  </view>
                 </van-cell-group>
                 <!--                </van-checkbox-group>-->
               </view>
@@ -73,7 +71,6 @@
               button-text="提交订单"
               @submit="onClickButton"
               v-bind:tip="true">
-
               <van-icon name="shopping-cart-o" v-bind:info="carts.length" size="25px" @click="showPopup"/>
               <view slot="tip">
                 <view>
@@ -130,14 +127,11 @@
                   </van-grid>
                 </van-row>
               </van-cell>
-
             </view>
           </view>
-
         </van-tab>
       </van-tabs>
     </view>
-
     <!--    购物车弹出框   遮盖层-->
     <view>
       <van-popup
@@ -207,9 +201,9 @@
           >
             <!--            <van-checkbox v-bind:value="selectAllStatus" checked-color="#FF2426" @change="SelectedAll($event)"/>-->
             <view>
-              <van-icon v-if="selectAllStatus" color="red" size="23px" name="passed" @click="SelectedAll($event)">全选
+              <van-icon v-if="selectAllStatus" color="red" size="23px" name="passed" @click="selectedAll($event)">全选
               </van-icon>
-              <van-icon v-else name="circle" size="23px" @click="SelectedAll($event)">全选</van-icon>
+              <van-icon v-else name="circle" size="23px" @click="selectedAll($event)">全选</van-icon>
             </view>
             <view slot="tip">
               {{cartTipText}}
@@ -224,10 +218,6 @@
 </template>
 
 <script>
-
-
-  import Toast from '../../../dist/wx/static/vant/toast/toast'
-
   export default {
     computed: {},
     onReady: function () {
@@ -255,7 +245,6 @@
       //页面显示，需要刷新购物车数据
       this.initCart()
       this.getTotalPrice()
-
     },
 
     data () {
@@ -302,10 +291,15 @@
           // 该导航下所有的可选项
           children: [],
           badge: 5
-        }, {
-          text: '早餐',
-          children: [],
         },
+          {
+            text: '限时打折',
+            children: [],
+          },
+          {
+            text: '早餐',
+            children: [],
+          },
           {
             text: '午餐',
             children: []
@@ -328,6 +322,8 @@
         selectAllStatus: true, // 全选状态，默认全选
         cartTipText: '十元起送，配送费1元',
         num: 0,
+        // sale: false,
+        totalMoney: '',
       }
     },
     methods: {
@@ -362,8 +358,8 @@
         if (that.value === '全部') {
           comment.get().then(res => {
             console.log(res)
-            that.commentList = [],
-              that.commentList = that.commentList.concat(res.data)
+            that.commentList = []
+            that.commentList = that.commentList.concat(res.data)
             that.commentImages = that.commentList.fileIds
           })
             .catch(err => {
@@ -375,8 +371,8 @@
           })
             .get().then(res => {
             console.log(res)
-            that.commentList = [],
-              that.commentList = that.commentList.concat(res.data)
+            that.commentList = []
+            that.commentList = that.commentList.concat(res.data)
           })
             .catch(err => {
               console.log(err)
@@ -426,17 +422,19 @@
         const that = this
         const db = wx.cloud.database()
         const good = db.collection('good')
+        const sale = db.collection('sale')
         if (that.selectedCategory === '全部') {
           good.get().then(res => {
             console.log(res)
-            that.goodList = [],
-              that.goodList = that.goodList.concat(res.data)
-            console.log('goodList:', that.goodList)
+            that.goodList = []
+            that.goodList = that.goodList.concat(res.data)
+            // console.log('goodList:', that.goodList)
+            this.getSaleList()
           })
             .catch(err => {
               console.log(err)
             })
-        } else if (that.selectedCategory !== '全部' && that.selectedCategory !== '') {
+        } else if (that.selectedCategory !== '全部' && that.selectedCategory !== '限时打折') {
           good.where({
             category: that.selectedCategory,
           })
@@ -445,35 +443,81 @@
             that.goodList = [],
               that.goodList = that.goodList.concat(res.data)
             console.log('goodList:', that.goodList)
+            this.getSaleList()
           })
             .catch(err => {
               console.log(err)
             })
+        } else if (that.selectedCategory === '限时打折') {
+          sale.get().then(res => {
+            console.log(res)
+            let saleList = res.data
+            that.goodList = saleList[0].goodList
+            // console.log('saleList:', saleList)
+            this.getSaleList()
+          }).catch(err => {
+            console.log(err)
+          })
         }
       },
-
+      //获取秒杀列表
+      getSaleList () {
+        const db = wx.cloud.database()
+        const sale = db.collection('sale')
+        sale.get().then(res => {
+          // console.log(res)
+          let saleList = res.data
+          saleList = saleList[0].goodList
+          // console.log('saleList:', saleList)
+          for (let i = 0; i < saleList.length; i++) {
+            const id = saleList[i]._id
+            const oPrice = saleList[i].price
+            const newPrice = saleList[i].nowPrice
+            this.goodList.map(item => {
+              if (item._id === id) {
+                return (item.oprice = oPrice, item.price = newPrice)
+              }
+            })
+            // console.log('1', this.goodList)
+          }
+        })
+      },
 //  提交订单按钮
       onClickButton () {
-        wx.navigateTo({
-          url: '/pages/onSubmitOder/main'
-        })
+        if (this.totalMoney > 10) {
+          wx.navigateTo({
+            url: '/pages/onSubmitOder/main'
+          })
+        } else {
+          wx.showToast({
+            title: this.cartTipText,
+            icon: 'none',
+            duration: 2000
+          })
+
+        }
+
       },
       showPopup () {
         this.show = true
         this.initCarts()
-      },
+      }
+      ,
       onClose () {
         this.show = false
-      },
+      }
+      ,
       //t添加按钮动画
       onClick (event) {
         this.isAdd = true
 
-      },
+      }
+      ,
       addShop (event) {
         console.log(event.mp.detail)
 
-      },
+      }
+      ,
       onAddCart (id) {
         // console.log(id)
         this.selectedGood = this.goodList.filter(item => item._id === id)
@@ -486,7 +530,8 @@
         this.addCart()
         this.initCarts()
         this.getTotalPrice()
-      },
+      }
+      ,
       //富选项
       onChangeAdd (event) {
         //获取选中的商品数据
@@ -501,8 +546,8 @@
           console.log('selectedGood', this.selectedGood)
           //向数组中添加num字段
           this.selectedGood.map(item => {
-            item.num = 1,
-              item.selected = true
+            item.num = 1
+            item.selected = true
           })
           this.initCarts()
           this.getTotalPrice()
@@ -510,14 +555,16 @@
         }
 
         this.addCart()
-      },
+      }
+      ,
 
       toggle (event) {
         // const {index} = event.currentTarget.dataset;
         // console.log(event.currentTarget.dataset);
         // const checkbox = this.selectComponent(`.checkboxes-${index}`)
         // checkbox.toggle()
-      },
+      }
+      ,
       //减商品
       reduceNum (data) {
         // const id = event.currentTarget.id
@@ -535,7 +582,8 @@
           key: 'cart',
           data: this.cart,
         })
-      },
+      }
+      ,
       //添加商品
       addNum (data) {
         // console.log(data);
@@ -549,14 +597,16 @@
           key: 'cart',
           data: this.cart,
         })
-      },
+      }
+      ,
 
       onChangeSelect (id, event) {
         console.log(event.mp.detail)
         this.checked1 = event.mp.detail
         console.log(event.currentTarget)
         console.log(id)
-      },
+      }
+      ,
       //单选
       onChangeSelected (id) {
         this.selectAllStatus = false
@@ -566,7 +616,8 @@
         this.$set(this.carts, index, this.carts[index])
         // console.log(id)
         this.getTotalPrice()
-      },
+      }
+      ,
       //计算总价
       getTotalPrice () {
         let carts = this.carts                 // 获取购物车列表
@@ -582,26 +633,28 @@
         this.num = num
         this.carts = carts// 最后赋值到data中渲染到页面
         this.totalPrice = total.toFixed(2)//如何使用 toFixed() 来舍入一个数字。
-        let totalMoney = Number(this.totalPrice)//因为组件的类型是数值
+        this.totalMoney = Number(this.totalPrice)//因为组件的类型是数值
         // console.log(this.totalMoney );
-        if (totalMoney < 10) {
-          let num = 10 - totalMoney
+        if (this.totalMoney < 10) {
+          let num = 10 - this.totalMoney
           this.cartTipText = `还差${num}就能起送,快去凑单`
         } else {
           this.cartTipText = '已满10元，包装费1元'
         }
         this.totalPrice = this.totalPrice * 100
 
-      },
+      }
+      ,
 
       onChangeValue (event) {
         // const index = event.currentTarget.dataset.eventid;
         //   console.log(index);
         this.result = event.mp.detail
         console.log(this.result)
-      },
+      }
+      ,
       //全选
-      SelectedAll (event) {
+      selectedAll (event) {
         let selectAllStatus = this.selectAllStatus
         selectAllStatus = !selectAllStatus
         let carts = this.carts
@@ -613,7 +666,8 @@
         this.carts = carts
         this.getTotalPrice() //重新获取总价
 
-      },
+      }
+      ,
       /**
        * 页面加载时读取用户本地缓存的购物车数据
        */
@@ -640,7 +694,8 @@
           // console.log('carts', carts)
           this.carts = carts
         }
-      },
+      }
+      ,
 
       addCart: function () {
         //  添加商品到购物车
@@ -694,7 +749,8 @@
           icon: 'success',
           duration: 2000
         })
-      },
+      }
+      ,
       //清空购物车
       deleteCartList () {
         this.cart = []
@@ -705,9 +761,11 @@
           key: 'cart',
         })
         // this. getTotalPrice;
-      },
+      }
+      ,
 
-    },
+    }
+    ,
 
   }
 </script>

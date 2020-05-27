@@ -35,7 +35,9 @@
             <van-cell>
               <van-row>
                 <van-toast id="van-toast"/>
-                <van-button type="default" size="small" @click="orderOver(item._id)">订单完成</van-button>
+                <van-button type="default" size="small" @click="orderOver(item._id)" v-if=" item.orderStatus!==text">
+                  订单完成
+                </van-button>
                 <!--                <van-button type="default" size="small" @click="goDetail>-->
                 <van-button type="default" size="small" @click="goProducts">再来一单</van-button>
                 <!--                </van-col>-->
@@ -108,6 +110,7 @@
         orderList: [],
         goodList: [],
         orderList2: [],
+        text: '订单完成',
       }
     },
     methods: {
@@ -172,12 +175,40 @@
       },
       //  订单完成
       orderOver (id) {
-        console.log(id)
-        const index = this.orderList.findIndex(item => item.id === id)
+        // console.log(id)
+        const index = this.orderList.findIndex(item => item._id === id)
+        console.log(index)
         if (this.orderList[index].orderStatus === '配送中') {
-
+          // /跟新食堂管理员端的Order表
+          const db = wx.cloud.database()
+          db.collection('orderAdmit').where({orderId: id})
+            .update({
+                data: {
+                  orderStatus: '订单完成',
+                }
+              }
+            ).then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          })
+          db.collection('order').where({_id: id})
+            .update({
+                data: {
+                  orderStatus: '订单完成',
+                }
+              }
+            ).then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          })
         } else {
-
+          wx.showToast({
+            title: '您的订单进行中',
+            icon: 'fail',
+            duration: 2000
+          })
         }
       },
     },

@@ -231,7 +231,6 @@
           this.addressInfo = ''
         }
         this.addressInfo = this.addressInfo.filter(item => item._id === this.selectedId)
-
       },
 
       showPopup () {

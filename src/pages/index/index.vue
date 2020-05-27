@@ -1,13 +1,6 @@
 <template>
 
   <view>
-    <!--  <van-search-->
-    <!--    :value=" value "-->
-    <!--    shape="round"-->
-    <!--    background="#015478"-->
-    <!--    placeholder="请输入搜索关键词"-->
-    <!--  />-->
-    <!--  搜索框-->
     <van-cell
       size="large"
       link-type="navigateTo"
@@ -20,44 +13,18 @@
         placeholder="请输入搜索关键词"
       />
     </van-cell>
-
-    <!--      v-bind:Click="onSearch($event)"-->
-
-    <!--    <van-search-->
-    <!--  :value="keyword"-->
-    <!--  placeholder="请输入搜索关键词"-->
-    <!--  use-action-slot-->
-    <!--&gt;-->
-    <!--  <view slot="action" @tap="onClick">搜索</view>-->
-    <!--</van-search>-->
-    <!--      <van-button type="default" @click="get">默认按钮</van-button>-->
     <!--轮播图-->
     <scroll-view scroll-y style="height: calc(35vh - 50px);" scroll-top="0">
-      <!--轮播图-->
       <div class="ub-box ub-ver z-bg-color-fff">
         <swiper class="swiper" indicator-dots="false" autoplay="false" interval="5000" duration="500">
           <block v-for="(item, idx) in imgUrls" :key="idx">
             <swiper-item>
-              <img :src="item" class="z-width-100-percent" mode="widthFix"/>
+              <img :src="item" class="z-width-100-percent" mode="widthFix" />
             </swiper-item>
           </block>
         </swiper>
       </div>
     </scroll-view>
-    <!--    分类入口-->
-    <!--    <view>-->
-    <!--      <van-grid :column-num="3">-->
-    <!--        <van-grid-item v-for="value in 3" :key="value" icon="photo-o" text="文字"/>-->
-    <!--      </van-grid>-->
-    <!--    </view>-->
-    <!--    索引栏-->
-    <!--    <van-tabs v-bind:active="active" @change="onChange($event)">-->
-    <!--      <van-tab title="全部"/>-->
-    <!--      <van-tab title="早餐"/>-->
-    <!--      <van-tab title="午餐"/>-->
-    <!--      <van-tab title="晚餐"/>-->
-    <!--    </van-tabs>-->
-    <!--猜你喜欢-->
     <van-cell>
       <view slot="title">
         <van-row>
@@ -65,53 +32,50 @@
             <view class="van-cell-text">限时秒杀</view>
           </van-col>
           <van-col span="8">
-            <van-count-down use-slot  v-bind:time=" time " @change="onChangeTime($event)">
+            <van-count-down use-slot v-bind:time=" time " @change="onChangeTime($event)">
               <text class="item">{{ timeData.hours }}</text>
               <text class="item">{{ timeData.minutes }}</text>
               <text class="item">{{ timeData.seconds }}</text>
             </van-count-down>
           </van-col>
-
         </van-row>
       </view>
     </van-cell>
     <!--      使用宫格方式展示-->
-    <scroll-view scroll-x="true" style="height:180px;" @scrolltoupper="upper" @scrolltolower="lower" @scroll="scroll">
-      <van-grid column-num="2">
+    <scroll-view scroll-x="true" style="height:100%;" @scrolltoupper="upper" @scrolltolower="lower" @scroll="scroll">
+      <van-grid column-num="2" v-if="sale">
         <van-grid-item
           use-slot
-          v-for="(item, idx) in goodList" :key="idx"
+          v-for="(item, idx) in  saleList[0].goodList" :key="idx"
           link-type="navigateTo"
-          url="/pages/products/main?index=${item.index}"
+          url="/pages/products/main"
         >
           <img
             style="width: 100%; height: 80px;"
             v-bind:src="item.fileIds"
           />
           <p class="title">{{item.goodName}}
-            <van-tag plain color="#FF2620">{{item.category}}</van-tag>
+            <van-tag color="#FF0000">{{item.discount}}</van-tag>
           </p>
-          <p class="text ">
+          <p class="text">
             <van-icon name="star" color="yellow"/>
             {{item.score}}
             月销售量：50
           </p>
-          <p class='price'>
-            ￥{{item.price}}
+          <p>
+            <text class="price"> ￥{{item.nowPrice}}</text>
             <text class='origin-price'>￥{{item.price}}</text>
           </p>
-
-
         </van-grid-item>
       </van-grid>
     </scroll-view>
     <!--附近商家-->
     <view>
-<!--      <dl class="ub-box ub-col z-margin-top-6-px z-padding-all-8-px" style="background:#fff">-->
-        <p class="z-width-100-percent ub-box ub-ver" style="border-bottom:1px solid #eee">
-          <span class="z-font-size-12 z-color-888 z-lineHeight-36">—附近商家—</span>
-        </p>
-<!--      </dl>-->
+      <!--      <dl class="ub-box ub-col z-margin-top-6-px z-padding-all-8-px" style="background:#fff">-->
+      <p class="z-width-100-percent ub-box ub-ver" style="border-bottom:1px solid #eee">
+        <span class="z-font-size-12 z-color-888 z-lineHeight-36">—附近商家—</span>
+      </p>
+      <!--      </dl>-->
     </view>
 
     <!--   常规的商品卡片  -->
@@ -139,39 +103,44 @@
 
   export default {
     computed: {},
-      onReady: function () {
-        this.getGoodList()
-      },
-      //测试
-      // getList () {
-      //   const that = this
-      //   const db = wx.cloud.database()
-      //   const banner = db.collection('banner')
-      //   banner.get().then(res => {
-      //     console.log(res.data[0].fileID)
-      //   })
-      //     .catch(err => {
-      //       console.log(err)
-      //     })
-      // },
-      //响应分类导航组件的分类点击事件
+    onReady: function () {
+      this.getGoodList()
+      this.getSaleList()
+    },
+    onLoad () {
+      this.getGoodList()
+      this.getSaleList()
+    },
+    //测试
+    // getList () {
+    //   const that = this
+    //   const db = wx.cloud.database()
+    //   const banner = db.collection('banner')
+    //   banner.get().then(res => {
+    //     console.log(res.data[0].fileID)
+    //   })
+    //     .catch(err => {
+    //       console.log(err)
+    //     })
+    // },
+    //响应分类导航组件的分类点击事件
 
-      //获取菜品信息
-      // getList () {
-      //   const that = this
-      //   const db = wx.cloud.database()
-      //   const banner = db.collection('good')
-      //   banner.get().then(res => {
-      //     console.log(res)
-      //     that.goodList = that.goodList.concat(res.data)
-      //     that.category = that.goodList.item.category
-      //     console.log('goodList:', that.goodList)
-      //     console.log('category:', that.category)   //打印分类
-      //   })
-      //     .catch(err => {
-      //       console.log(err)
-      //     })
-      // },
+    //获取菜品信息
+    // getList () {
+    //   const that = this
+    //   const db = wx.cloud.database()
+    //   const banner = db.collection('good')
+    //   banner.get().then(res => {
+    //     console.log(res)
+    //     that.goodList = that.goodList.concat(res.data)
+    //     that.category = that.goodList.item.category
+    //     console.log('goodList:', that.goodList)
+    //     console.log('category:', that.category)   //打印分类
+    //   })
+    //     .catch(err => {
+    //       console.log(err)
+    //     })
+    // },
 
     data () {
       return {
@@ -188,6 +157,8 @@
         keyword: '',
         time: 30 * 60 * 60 * 1000,
         timeData: {},
+        saleList: [],
+        sale: false,
       }
     },
     methods: {
@@ -195,7 +166,6 @@
       onChangeTime (e) {
         this.timeData = e.mp.detail
       },
-
 
       upper (e) {
         console.log(e)
@@ -235,7 +205,24 @@
           console.log('selectedCategory:', this.selectedCategory)
 
       },
+      //获取打折列表
+      // 查询促销活动
+      getSaleList () {
+        const that = this
+        const db = wx.cloud.database()
+        const good = db.collection('sale')
+        good.get().then(res => {
+          console.log(res)
+          that.saleList = []
+          that.saleList = that.saleList.concat(res.data)
+          if(that.saleList.length>0){
+              that.sale=true
+          }
 
+        }).catch(err => {
+          console.log(err)
+        })
+      },
       //     获取列表
       getGoodList () {
         const that = this
@@ -335,17 +322,19 @@
   }
 
   .title {
-    font-size: 18px;
+    font-size: 15px;
+    font-weight: bold;
   }
 
   .price {
     padding-top: 2px;
-    color: #e64340;
-    font-size: 18px;
+    color: #ff0000;
+    font-size: 15px;
+    font-weight: bold;
   }
 
   .origin-price {
-    font-size: 16px;
+    font-size: 15px;
     padding-top: 2px;
     line-height: 20px;
     color: #555555 !important;
@@ -354,7 +343,9 @@
 
   .text {
     font-size: 14px;
+    color: #565656;
   }
+
 
   .item {
     display: inline-block;

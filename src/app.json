@@ -1,6 +1,7 @@
 {
   "pages": [
-    "pages/index/main",
+      "pages/index/main",
+    "pages/products/main",
     "pages/admit/admitOrder/main",
     "pages/admit/admitIndex/main",
     "pages/admit/goodManage/main",
@@ -11,7 +12,6 @@
     "pages/manage/main",
     "pages/oderList/main",
     "pages/comment/main",
-    "pages/products/main",
     "pages/orderDetail/main",
     "pages/onSubmitOder/main",
     "pages/go/main",
