@@ -89,7 +89,7 @@
                 <van-col span="6" v-for="(item,index) in tags" :key="index">
                   <van-tag plain size="large" v-if="!item.selected" @click="onClickTag(item.id)">{{item.value}}
                   </van-tag>
-                  <van-tag color="#ff4d37" v-else size="large" @click="onClickTag(item.id)">{{item.value}}</van-tag>
+                  <van-tag color="#FF2426" v-else size="large" @click="onClickTag(item.id)">{{item.value}}</van-tag>
                 </van-col>
               </van-row>
             </van-cell>
