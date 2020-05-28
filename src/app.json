@@ -1,7 +1,10 @@
 {
   "pages": [
-      "pages/index/main",
+    "pages/go/main",
+    "pages/index/main",
+    "pages/orderMessage/main",
     "pages/products/main",
+    "pages/onSubmitOder/main",
     "pages/admit/admitOrder/main",
     "pages/admit/admitIndex/main",
     "pages/admit/goodManage/main",
@@ -13,10 +16,7 @@
     "pages/oderList/main",
     "pages/comment/main",
     "pages/orderDetail/main",
-    "pages/onSubmitOder/main",
-    "pages/go/main",
     "pages/address/main",
-    "pages/orderMessage/main",
     "pages/updateAddress/main",
     "pages/addAddress/main"
   ],

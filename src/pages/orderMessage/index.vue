@@ -8,7 +8,7 @@
           <van-row>
             <van-col span="6" v-for="(item,index) in tags" :key="index">
               <van-tag plain size="large" v-if="!item.selected" @click="onClick(item.id)">{{item.value}}</van-tag>
-              <van-tag color="#ff4d37" v-else size="large" @click="onClick(item.id)">{{item.value}}</van-tag>
+              <van-tag color="#FF2426" v-else size="large" @click="onClick(item.id)">{{item.value}}</van-tag>
             </van-col>
           </van-row>
           </van-tab>
@@ -148,8 +148,8 @@
 
   .foot {
     width: 100%;
-    height: 10%;
-    background: #ff4d37;
+    height: 8%;
+    background: #ff2624;
     margin: 0 auto;
     display: flex;
     flex-direction: row;

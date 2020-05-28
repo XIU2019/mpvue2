@@ -33,7 +33,8 @@
                   <view
                     v-for="(item, idx) in goodList"
                     :key="idx"
-                    v-bind:data-index="index">
+                    v-bind:data-index="index"
+                  >
                     <!--                      @click="toggle"-->
                     <!--   常规的商品卡片  -->
                     <van-card
@@ -51,16 +52,11 @@
                         {{item.score}}
                       </view>
                       <view slot="footer">
-                        <!--                          <van-checkbox v-bind:name="item._id" use-icon-slot>-->
-                        <!--                            <van-icon slot="icon" name="add-o" color="red" size="20px"/>-->
-                        <!--                          </van-checkbox>-->
-
                         <van-icon name="add-o" color="red" size="23px" @click="onAddCart(item._id)"/>
                       </view>
                     </van-card>
                   </view>
                 </van-cell-group>
-                <!--                </van-checkbox-group>-->
               </view>
             </van-tree-select>
           </view>
@@ -173,9 +169,6 @@
                   <view slot="title" class="D">
                     {{ item.goodName}}
                   </view>
-                  <!--                  <view slot="desc" class="D">-->
-                  <!--                    {{ item.description}}-->
-                  <!--                  </view>-->
                   <view slot="price" class="carts-price">
                     ￥ {{ item.price}}
                   </view>

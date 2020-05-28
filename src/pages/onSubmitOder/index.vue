@@ -24,9 +24,27 @@
           </van-tab>
           <van-tab title="食堂自取">
             <van-cell-group>
-              <van-cell title="商家地址" value="内容" center/>
-              <van-cell title="自取时间" is-link value="内容"/>
-              <van-cell title="预留电话" is-link value="内容"/>
+              <van-field
+                value="桂工屏风校区食堂一楼"
+                label="商家地址"
+                disabled
+                v-bind:border="false "
+              />
+              <van-field
+                v-bind:value="name"
+                label="联系人"
+                placeholder="请输入联系人"
+                @change="onChangeName"
+              />
+              <van-field
+                v-bind:value="phone"
+                label="预留电话"
+                placeholder="请输入预留电话"
+                @change="onChangePhone"
+                v-bind:error-message="message2"
+              />
+
+              <van-cell title="自取时间" is-link v-bind:value="time2" @click="showPopupTime2"/>
             </van-cell-group>
           </van-tab>
         </van-tabs>
@@ -56,7 +74,7 @@
             <van-cell title="包装费" v-bind:value="totalNum"/>
             <van-cell title="配送费" value="￥1"/>
             <van-cell title="小计" v-bind:value="'￥'+totalMoney"/>
-            <van-cell title="支付方式" value="线下支付"/>
+            <van-cell title="支付方式" value="线上支付"/>
             <van-cell title="备注" is-link v-bind:value="message" link-type="navigateTo"
                       url="/pages/orderMessage/main"/>
           </van-cell-group>
@@ -116,6 +134,17 @@
         @cancel="cancelTime"
       />
     </van-popup>
+    <!--    自取弹出窗口选择-->
+    <!-- 时间弹出窗口-->
+    <van-popup v-bind:show="showTime2" @close="onCloseTime2" position="bottom" custom-style="height: 50%;">
+      <van-datetime-picker
+        type="time"
+        v-bind:value="currentDate2"
+        v-bind:filter="filter2"
+        @confirm="confirmTime2($event)"
+        @cancel="cancelTime2"
+      />
+    </van-popup>
   </div>
 </template>
 
@@ -128,7 +157,11 @@
     onReady: function () {
       // this.getGoodList()
       // this.initCarts()
+      this.getAddress()
       this.getTotalPrice()
+      this.initAddressInfo()
+      this.initTime1()
+      this.initTime2()
     },
 
     /**
@@ -146,6 +179,9 @@
       this.message = e.message
       var util = require('../../utils/index.js')
       this.nowDate = util.formatTime(new Date())
+      this.initAddressInfo()
+      this.initTime1()
+      this.initTime2()
     },
 
     /**
@@ -156,9 +192,13 @@
       this.initCart()
       this.getTotalPrice()
       this.getAddress()
+      this.initAddressInfo()
+      this.initTime1()
+      this.initTime2()
     },
     data () {
       return {
+        message2: '',//错误提示
         nowDate: '',//下单时间
         orderTypes: '外卖配送',//订单类型
         carts: [],
@@ -170,8 +210,16 @@
         addressInfo: [],
         selectedAddressInfo: [],//选择的地址信息
         showTime: false,//时间弹出窗口
+        showTime2: false,//时间弹出窗口
         time: '',//渲染的时间数据
         currentDate: '12:00',
+        currentDate2: '12:00',
+        filter2 (type, options) {
+          if (type === 'minute') {
+            return options.filter((option) => option % 15 === 0)
+          }
+          return options
+        },
         filter (type, options) {
           if (type === 'minute') {
             return options.filter((option) => option % 15 === 0)
@@ -181,6 +229,9 @@
         message: '无接触配送',
         order_id: '',//用户订单的id
         orderAdmit_id: '',//食堂顶单的id
+        time2: '',//自取时间
+        phone: '',//预留电话
+        name: '',//联系人
       }
     },
     methods: {
@@ -200,11 +251,6 @@
               carts = [...carts]
             }
           })
-          // console.log('carts',carts);
-          // carts.map(item => {
-          //   item.num = 1
-          // })
-          // console.log('carts', carts)
           this.carts = carts
         }
       },
@@ -234,6 +280,14 @@
         this.$set(this.addressInfo, index, this.addressInfo[index])
         this.flat = false
         this.selectedAddressInfo = this.addressInfo.filter(item => item._id === id)//将选中的地址展示出来上
+        // 缓存地址信息
+        wx.setStorage({
+          key: 'selectedAddressInfo',
+          data: this.selectedAddressInfo,
+          success (res) {
+            // console.log(res)
+          }
+        })
       },
       //新增地址
       addAddress () {
@@ -264,15 +318,64 @@
         }).catch(err => {
           console.log(err)
         })
-
       },
-      //初始化缓存
-      // initOrderInfo(){
-      //    var value = wx.getStorageSync('cart')
-      //   if (value) {
-      // },
-
-
+      //初始化缓存地址
+      initAddressInfo () {
+        let value = wx.getStorageSync('selectedAddressInfo')
+        if (value) {
+          this.selectedAddressInfo = value
+          // console.log(this.saleList.goodList)
+          this.flat = false
+        } else {
+          this.selectedAddressInfo = ''
+          console.log('2')
+        }
+      },
+      //初始化派送时间
+      initTime1 () {
+        let value = wx.getStorageSync('time')
+        if (value) {
+          this.time = value
+        } else {
+          this.time = ''
+          console.log('2')
+        }
+      },
+      //初始化时间
+      initTime2 () {
+        let value = wx.getStorageSync('time2')
+        if (value) {
+          this.time2 = value
+        } else {
+          this.time2 = ''
+          console.log('2')
+        }
+      },
+      //食堂自取时间选择
+      showPopupTime2 () {
+        this.showTime2 = true
+      },
+      //关闭弹出窗口
+      onCloseTime2 () {
+        this.showTime2 = false
+      },
+      //获取预留电话
+      //  获取联系电话
+      onChangePhone (event) {
+        var that = this
+        let phone = event.mp.detail
+        if (!(/^1([3456789])\d{9}$/.test(phone))) {
+          that.message2 = '手机号码格式错误'
+          that.phone = ''
+        } else {
+          that.message2 = ''
+          that.phone = phone
+        }
+      },
+      //获取联系人姓名
+      onChangeName (event) {
+        this.name = event.mp.detail
+      },
       //计算总价
       getTotalPrice () {
         let carts = this.carts                 // 获取购物车列表
@@ -309,6 +412,33 @@
         this.currentDate = event.mp.detail
         this.time = '大约' + this.currentDate + '送达'
         this.showTime = false
+        // 缓存时间信息
+        wx.setStorage({
+          key: 'time',
+          data: this.time,
+          success (res) {
+            // console.log(res)
+          }
+        })
+      },
+      //确认
+      confirmTime2 (event) {
+        console.log(event.mp.detail)
+        this.currentDate2 = event.mp.detail
+        this.time2 = '大约' + this.currentDate2 + '自取'
+        this.showTime = false
+        // 缓存自取时间信息
+        wx.setStorage({
+          key: 'time2',
+          data: this.time2,
+          success (res) {
+            // console.log(res)
+          }
+        })
+      },
+      //取消
+      cancelTime2 () {
+        this.showTime = false
       },
       cancelTime () {
         this.showTime = false
@@ -322,61 +452,113 @@
       addOder () {
         var that = this
         const db = wx.cloud.database()
-        db.collection('order').add({
-          data:
-            {
-              userName: that.selectedAddressInfo[0].userName,
-              phone: that.selectedAddressInfo[0].phone,
-              addressCity: that.selectedAddressInfo[0].addressCity,
-              address: that.selectedAddressInfo[0].address,
-              orderTime: that.nowDate,
-              goodList: that.carts,
-              totalMoney: that.totalMoney,
-              sendTime: that.time,
-              orderTypes: that.orderTypes,
-              orderInfo: that.message,
-              payment: '在线支付',
-              paymentStatus: '待支付',
-              orderStatus: '待支付',
-              serviceStatus:'待评价',
-            }
-        }).then(res => {
-          console.log(res)
-          that.order_id = res._id
-        })
-          .catch(err => {
-            console.log(err)
+        if (that.orderTypes === '外卖配送') {
+          db.collection('order').add({
+            data:
+              {
+                userName: that.selectedAddressInfo[0].userName,
+                phone: that.selectedAddressInfo[0].phone,
+                addressCity: that.selectedAddressInfo[0].addressCity,
+                address: that.selectedAddressInfo[0].address,
+                orderTime: that.nowDate,
+                goodList: that.carts,
+                totalMoney: that.totalMoney,
+                sendTime: that.time,
+                orderTypes: that.orderTypes,
+                orderInfo: that.message,
+                payment: '线上支付',
+                paymentStatus: '待支付',
+                orderStatus: '待支付',
+                serviceStatus: '待评价',
+              }
+          }).then(res => {
+            console.log(res)
+            that.order_id = res._id
           })
+            .catch(err => {
+              console.log(err)
+            })
+        } else {
+          db.collection('order').add({
+            data:
+              {
+                userName: that.name,
+                phone: that.phone,
+                orderTime: that.nowDate,
+                goodList: that.carts,
+                totalMoney: that.totalMoney,
+                sendTime: that.time2,
+                orderTypes: that.orderTypes,
+                orderInfo: that.message,
+                payment: '线上支付',
+                paymentStatus: '待支付',
+                orderStatus: '待支付',
+                serviceStatus: '待评价',
+              }
+          }).then(res => {
+            console.log(res)
+            that.order_id = res._id
+          })
+            .catch(err => {
+              console.log(err)
+            })
+        }
       },
       //添加到食堂管理员端的数据
       orderAdmit () {
         var that = this
         const db = wx.cloud.database()
-        db.collection('orderAdmit').add({
-          data:
-            {
-              orderId:that.order_id,
-              userName: that.selectedAddressInfo[0].userName,
-              phone: that.selectedAddressInfo[0].phone,
-              addressCity: that.selectedAddressInfo[0].addressCity,
-              address: that.selectedAddressInfo[0].address,
-              orderTime: that.nowDate,
-              goodList: that.carts,
-              totalMoney: that.totalMoney,
-              sendTime: that.time,
-              orderTypes: that.orderTypes,
-              orderInfo: that.message,
-              payment: '在线支付',
-              paymentStatus: '待支付',
-              orderStatus: '待支付',
-            }
-        }).then(res => {
-          console.log(res)
-          that.orderAdmit_id = res._id
-        })
-          .catch(err => {
-            console.log(err)
+        if (that.orderTypes === '外卖配送') {
+          db.collection('orderAdmit').add({
+            data:
+              {
+                orderId: that.order_id,
+                userName: that.selectedAddressInfo[0].userName,
+                phone: that.selectedAddressInfo[0].phone,
+                addressCity: that.selectedAddressInfo[0].addressCity,
+                address: that.selectedAddressInfo[0].address,
+                orderTime: that.nowDate,
+                goodList: that.carts,
+                totalMoney: that.totalMoney,
+                sendTime: that.time,
+                orderTypes: that.orderTypes,
+                orderInfo: that.message,
+                payment: '线上支付',
+                paymentStatus: '待支付',
+                orderStatus: '待支付',
+              }
+          }).then(res => {
+            console.log(res)
+            that.orderAdmit_id = res._id
           })
+            .catch(err => {
+              console.log(err)
+            })
+        } else {
+          db.collection('orderAdmit').add({
+            data:
+              {
+                userName: that.name,
+                phone: that.phone,
+                orderTime: that.nowDate,
+                goodList: that.carts,
+                totalMoney: that.totalMoney,
+                sendTime: that.time2,
+                orderTypes: that.orderTypes,
+                orderInfo: that.message,
+                payment: '线上支付',
+                paymentStatus: '待支付',
+                orderStatus: '待支付',
+                serviceStatus: '待评价',
+              }
+          }).then(res => {
+            console.log(res)
+            that.orderAdmit_id = res._id
+          })
+            .catch(err => {
+              console.log(err)
+            })
+        }
       },
       //提交按钮
       onSubmit: function () {
@@ -388,11 +570,6 @@
           message: '您即将支付￥' + this.totalMoney,
         })
           .then((res) => {
-            // on confirm
-            // // 页面提示支付中
-            // wx.showLoading({
-            //   title: '支付中',
-            // })
             const db = wx.cloud.database()
             //更新order表中的状态
             db.collection('order').doc(that.order_id)
@@ -412,20 +589,22 @@
             db.collection('orderAdmit').doc(that.orderAdmit_id)
               .update({
                   data: {
-                     orderId:that.order_id,
+                    orderId: that.order_id,
                     paymentStatus: '已支付',
                     orderStatus: '等待接单',
                   }
                 }
               ).then(res => {
               console.log(res)
-              // wx.showLoading({
-              //   title: '支付成功',
-              // })
-                // 转到订单详情
-            wx.redirectTo({
-              url: `/pages/orderDetail/main?order_id=${that.order_id}&orderAdmit_id=${that.orderAdmit_id}`,
-            })
+              wx.showToast({
+                title: '支付成功',
+                icon: 'success',
+                duration: 2000
+              })
+              // 转到订单详情
+              wx.redirectTo({
+                url: `/pages/orderDetail/main?order_id=${that.order_id}&orderAdmit_id=${that.orderAdmit_id}`,
+              })
             })
               .catch(err => {
                 console.log(err)

@@ -46,7 +46,6 @@
 
     </div>
     <div class="foot">
-      <!--   <van-button type="primary" size="large">保存地址</van-button>-->
       <text @click="addAddress">保存地址</text>
     </div>
     <!--弹出遮罩层的内容-->
@@ -238,25 +237,11 @@
       confirm (event) {
         this.show = false
         this.selected = true
-        // console.log(event.mp.detail)
-        // let m = new Map()
         let m = event.mp.detail.values
-        // console.log(typeof m)
-        // console.log(JSON.stringify(m[0].name))
         this.addressCity= m[0].name + m[1].name + m[2].name
         console.log(this.addressCity)
         this.selectedAddress = '收货地址' + '\xa0\xa0\xa0\xa0\xa0' + m[0].name + m[1].name + m[2].name
         console.log(this.selectedAddress)
-        // for (var i = 0; i < m.length; i++) {
-        //
-        //   let name = m[i].name
-        //   console.log(name)
-        //   this.names = this.names.concat(name)
-        // }
-        // console.log(this.names)
-        // for (let value of this.names.values()) {
-        //   console.log(value)
-        // }
       },
       onchangeArea (event) {
         // console.log(event.mp.detail)
@@ -267,28 +252,14 @@
       //获取门牌号
       onChangeAddress2 (event) {
         this.address = event.mp.detail
-        console.log(event.mp.detail)
+        // console.log(event.mp.detail)
       },
       //获取联系人
       onChangeUserName (event) {
-        console.log(event.mp.detail)
+        // console.log(event.mp.detail)
         this.userName = event.mp.detail
       },
       //  获取联系电话
-      // onInput (event) {
-      //   console.log(event.mp.detail);
-      //   var that = this;
-      //   let phone = event.mp.detail;
-      //   if (!(/^1([3456789])\d{9}$/.test(phone))) {
-      //     that.message = '手机号码格式错误';
-      //     that.phone = '';
-      //   } else {
-      //       that.message='';
-      //     that.phone = phone;
-      //   }
-      // },
-      //  获取联系电话
-
       onChangePhone (event) {
         var that = this
         let phone = event.mp.detail
@@ -303,8 +274,6 @@
       //  增加地址
       addAddress () {
         var that = this
-        // that.addressAll = that.addressAll + that.address
-        //添加到数据库
         const db = wx.cloud.database()
         db.collection('address').add({
           data:

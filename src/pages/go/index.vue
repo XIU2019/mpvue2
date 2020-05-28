@@ -1,19 +1,22 @@
 <template>
   <view class="contain">
     <view class="go">
-      <!--             <button  v-on:click="goHome">{{content}}</button>-->
-<!--      <van-button type="info" v-on:click="goHome">{{content}}</van-button>-->
-      <van-button type="danger" color="#FF374D" size="small" v-on:click="goHome">{{content}}</van-button>
-
+      <van-button type="danger" color="#FF374D" size="small" v-on:click="goHome1">跳转</van-button>
     </view>
     <view>
-
       <img class="bg" v-bind:src="img" alt=""/>
     </view>
   </view>
 </template>
 <script>
   export default {
+    onLoad () {
+      setTimeout(function () {
+        wx.reLaunch({
+          url: '/pages/index/main'
+        })
+      }, 5000)
+    },
     data () {
       return {
         img: '/static/images/go.jpg',
@@ -25,41 +28,11 @@
       }
     },
     methods: {
-      //     onReady(){
-      //       let timejump = 3;
-      //       this.count = timejump ;
-      //       this.timer = setInterval(() => {
-      //         if (this.count > 0 && this.count <= timejump) {
-      //           this.count--;
-      //         } else {
-      //           clearInterval(this.timer);
-      //           this.timer = null;
-      //           this.go()
-      //         }
-      //       },1000)
-      //     },
-      //     go(){
-      //       clearInterval(this.timer);
-      //       this.timer= null;
-      //        wx.reLaunch({
-      //   url: '/pages/index/main'
-      // });
-      //     },
-// countDown(){
-//  if (!this.canClick) return   //改动的是这两行代码
-//   this.canClick = false
-//   this.content = this.totalTime + 's后跳转'
-//   let clock = window.setInterval(() => {
-//     this.totalTime--
-//     this.content = this.totalTime + 's后跳转'
-//     if (this.totalTime < 0) {
-//        wx.reLaunch({
-//       url: '/pages/index/main'
-//     })
-//     }
-//   },1000)
-// },
-
+      goHome1(){
+         wx.reLaunch({
+                url: '/pages/index/main'
+              })
+      },
       goHome () {
         let timejump = 3
         this.count = timejump
