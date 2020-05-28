@@ -1,7 +1,7 @@
 <template>
   <view class="contain">
     <view class="go">
-      <van-button type="danger" color="#FF374D" size="small" v-on:click="goHome1">跳转</van-button>
+      <van-button type="danger" color="#FF374D" size="small" v-on:click="goHome1">{{content }}</van-button>
     </view>
     <view>
       <img class="bg" v-bind:src="img" alt=""/>
@@ -11,11 +11,12 @@
 <script>
   export default {
     onLoad () {
-      setTimeout(function () {
-        wx.reLaunch({
-          url: '/pages/index/main'
-        })
-      }, 5000)
+       this. countTime () ;
+      // setTimeout(function () {
+      //   wx.reLaunch({
+      //     url: '/pages/index/main'
+      //   })
+      // }, 5000);
     },
     data () {
       return {
@@ -28,14 +29,15 @@
       }
     },
     methods: {
-      goHome1(){
-         wx.reLaunch({
-                url: '/pages/index/main'
-              })
+      goHome1 () {
+        wx.reLaunch({
+          url: '/pages/index/main'
+        })
       },
-      goHome () {
-        let timejump = 3
+      countTime () {
+        let timejump = 5
         this.count = timejump
+         this.content = this.count + 's后跳转'
         if (!this.timer) {
           this.count = timejump
           this.show = false
@@ -52,7 +54,7 @@
                 url: '/pages/index/main'
               })
             }
-          }, 3000)
+          }, 1000)
         }
       },
 
