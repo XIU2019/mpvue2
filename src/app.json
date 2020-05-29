@@ -1,5 +1,7 @@
 {
   "pages": [
+    "pages/my/main",
+    "pages/commentList/main",
     "pages/go/main",
     "pages/index/main",
     "pages/orderMessage/main",
@@ -9,7 +11,6 @@
     "pages/admit/admitIndex/main",
     "pages/admit/goodManage/main",
     "pages/admitLogin/main",
-    "pages/my/main",
     "pages/search/main",
     "pages/login/main",
     "pages/manage/main",

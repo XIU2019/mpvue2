@@ -35,7 +35,6 @@
                     :key="idx"
                     v-bind:data-index="index"
                   >
-                    <!--                      @click="toggle"-->
                     <!--   常规的商品卡片  -->
                     <van-card
                       v-bind:value="item._id"
@@ -91,39 +90,38 @@
             </van-cell>
           </view>
           <view class="main1 ">
-            <view v-for="(item, idx) in commentList" :key="idx">
-              <van-cell v-bind:value="item.commentTime" icon="user-o">
-                <view slot="title">
-                  <view class="van-cell-text">匿名用户
-                    <van-rate readonly size="10px" v-bind:value="item.score" @change="onChange"/>
-                  </view>
+              <view v-for="(item, idx) in commentList" :key="idx">
+            <van-cell v-bind:value="item.commentTime" icon="user-o">
+              <view slot="title">
+                <view class="van-cell-text">匿名用户
+                  <van-rate readonly size="10px" v-bind:value="item.score" @change="onChange"/>
                 </view>
-              </van-cell>
-              <van-cell>
-                <van-row>
-                  <van-col>
-                    人均 ￥: {{item.per_cost}}
-                  </van-col>
-                </van-row>
-              </van-cell>
-              <van-cell>
-                <van-row>
-                  <van-col>评价内容：{{item.content}}</van-col>
-                </van-row>
-                <van-row>
-                  <van-grid column-num="3">
-                    <van-grid-item use-slot v-for="(item, index) in item.fileIds" :key="index">
-                      <!--                    <view slot="icon">-->
-                      <img
-                        style="width:80px; height: 80px;"
-                        v-bind:src="item"
-                      />
-                      <!--                    </view>-->
-                    </van-grid-item>
-                  </van-grid>
-                </van-row>
-              </van-cell>
-            </view>
+              </view>
+            </van-cell>
+            <van-cell>
+              <van-row>
+                <van-col class="text">
+                  人均 ￥: {{item.per_cost}}
+                </van-col>
+              </van-row>
+              <van-row class="text">
+                <van-col>评价内容：{{item.content}}</van-col>
+              </van-row>
+              <van-row>
+                <van-grid column-num="3">
+                  <van-grid-item use-slot v-for="(item, index) in item.fileIds" :key="index">
+                    <img
+                      style="width:80px; height: 80px;"
+                      v-bind:src="item"
+                    />
+                  </van-grid-item>
+                </van-grid>
+              </van-row>
+              <van-row class="box">
+                商家回复:{{item.reply}}
+              </van-row>
+            </van-cell>
+          </view>
           </view>
         </van-tab>
       </van-tabs>
@@ -825,6 +823,21 @@
   .value-class {
     flex: none !important;
   }
+  .text {
+    font-size: 16px;
+    line-height: 22px;
+  }
 
+  .box {
+    float: left;
+    height: auto;
+    width: 100%;
+    font-size: 15px;
+    background: #f1f1f1;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    color: #535353;
+  }
 
 </style>

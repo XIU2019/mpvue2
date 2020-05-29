@@ -57,7 +57,7 @@
           is-link
           title="我的评价"
           link-type="navigateTo"
-          url="/pages/orderList/main"
+          url="/pages/commentList/main"
         />
          <!--        我的钱包-->
         <van-cell

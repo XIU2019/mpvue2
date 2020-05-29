@@ -88,7 +88,7 @@
         fileIds: [],
         orderId: '',
         selectedCategory: '待评价',
-         nowDate :'',
+        nowDate: '',
       }
     },
     methods: {
@@ -159,9 +159,11 @@
               content: that.content,
               per_cost: that.per_cost,
               orderId: that.orderId,
-              // movieid:that.movieid,
               fileIds: that.fileIds,
-              commentTime:that.nowDate,
+              commentTime: that.nowDate,
+              replyStatus: '待回复',
+              reply: '',
+              replyTime: '',
             }
           }).then(res => {
             console.log(res)
@@ -201,10 +203,10 @@
         db.collection('orderAdmit').where(
           {data: {orderId: this.orderId}})
           .update({
-          data: {
-            serviceStatus: '已评价'
-          }
-        }).then(res => {
+            data: {
+              serviceStatus: '已评价'
+            }
+          }).then(res => {
           console.log(res)
         })
           .catch(err => {
