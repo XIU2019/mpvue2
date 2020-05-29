@@ -162,6 +162,8 @@
       this.initAddressInfo()
       this.initTime1()
       this.initTime2()
+      this.random_No2()
+      this.getMealCode()
     },
 
     /**
@@ -182,6 +184,8 @@
       this.initAddressInfo()
       this.initTime1()
       this.initTime2()
+      this.random_No2()
+      this.getMealCode()
     },
 
     /**
@@ -195,6 +199,8 @@
       this.initAddressInfo()
       this.initTime1()
       this.initTime2()
+      this.random_No2()
+      this.getMealCode()
     },
     data () {
       return {
@@ -232,9 +238,35 @@
         time2: '',//自取时间
         phone: '',//预留电话
         name: '',//联系人
+        orderId: '',//订单号
+        mealCode: '',//取餐码
       }
     },
     methods: {
+      // 利用uuid生成唯一的取餐码
+      getMealCode () {
+        /**
+         * @return {string}
+         */
+        function S4 () {
+          return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+        }
+
+        this.mealCode = (S4() + ' ' + S4() + ' ' + S4())
+      },
+      //利用日期时间+5位随机数
+      random_No2: function () {
+        let random_no = Math.random().toString().substr(2, 5)
+        var now = new Date(),
+          y = now.getFullYear(),
+          m = now.getMonth() + 1,
+          d = now.getDate()
+        const hour = now.getHours()
+        const minute = now.getMinutes()
+        const second = now.getSeconds()
+        let time = y + (m < 10 ? '0' + m : m) + (d < 10 ? '0' + d : d) + hour + minute + second
+        this.orderId = time + random_no
+      },
       initCart: function () {
         var value = wx.getStorageSync('cart')
         if (value) {
@@ -456,6 +488,7 @@
           db.collection('order').add({
             data:
               {
+                orderId: that.orderId,
                 userName: that.selectedAddressInfo[0].userName,
                 phone: that.selectedAddressInfo[0].phone,
                 addressCity: that.selectedAddressInfo[0].addressCity,
@@ -482,6 +515,8 @@
           db.collection('order').add({
             data:
               {
+                orderId: that.orderId,
+                mealCode: that.mealCode,//取餐码
                 userName: that.name,
                 phone: that.phone,
                 orderTime: that.nowDate,
@@ -512,7 +547,8 @@
           db.collection('orderAdmit').add({
             data:
               {
-                orderId: that.order_id,
+                order_Id: that.order_id,
+                orderId: that.orderId, //订单号
                 userName: that.selectedAddressInfo[0].userName,
                 phone: that.selectedAddressInfo[0].phone,
                 addressCity: that.selectedAddressInfo[0].addressCity,
@@ -538,6 +574,8 @@
           db.collection('orderAdmit').add({
             data:
               {
+                orderId: that.orderId,//订单号
+                mealCode: that.mealCode,//取餐码
                 userName: that.name,
                 phone: that.phone,
                 orderTime: that.nowDate,
@@ -589,7 +627,7 @@
             db.collection('orderAdmit').doc(that.orderAdmit_id)
               .update({
                   data: {
-                    orderId: that.order_id,
+                    order_Id: that.order_id,
                     paymentStatus: '已支付',
                     orderStatus: '等待接单',
                   }
@@ -615,6 +653,7 @@
             // on cancel
           })
       },
+
     },
   }
 </script>

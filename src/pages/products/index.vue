@@ -496,19 +496,16 @@
       ,
       onClose () {
         this.show = false
-      }
-      ,
+      },
       //t添加按钮动画
       onClick (event) {
         this.isAdd = true
 
-      }
-      ,
+      },
       addShop (event) {
         console.log(event.mp.detail)
 
-      }
-      ,
+      },
       onAddCart (id) {
         // console.log(id)
         this.selectedGood = this.goodList.filter(item => item._id === id)
@@ -521,8 +518,7 @@
         this.addCart()
         this.initCarts()
         this.getTotalPrice()
-      }
-      ,
+      },
       //富选项
       onChangeAdd (event) {
         //获取选中的商品数据
@@ -546,16 +542,14 @@
         }
 
         this.addCart()
-      }
-      ,
+      },
 
       toggle (event) {
         // const {index} = event.currentTarget.dataset;
         // console.log(event.currentTarget.dataset);
         // const checkbox = this.selectComponent(`.checkboxes-${index}`)
         // checkbox.toggle()
-      }
-      ,
+      },
       //减商品
       reduceNum (data) {
         // const id = event.currentTarget.id
@@ -573,8 +567,7 @@
           key: 'cart',
           data: this.cart,
         })
-      }
-      ,
+      },
       //添加商品
       addNum (data) {
         // console.log(data);
@@ -588,16 +581,14 @@
           key: 'cart',
           data: this.cart,
         })
-      }
-      ,
+      },
 
       onChangeSelect (id, event) {
         console.log(event.mp.detail)
         this.checked1 = event.mp.detail
         console.log(event.currentTarget)
         console.log(id)
-      }
-      ,
+      },
       //单选
       onChangeSelected (id) {
         this.selectAllStatus = false
@@ -633,9 +624,7 @@
           this.cartTipText = '已满10元，包装费1元'
         }
         this.totalPrice = this.totalPrice * 100
-
-      }
-      ,
+      },
 
       onChangeValue (event) {
         // const index = event.currentTarget.dataset.eventid;

@@ -1,96 +1,63 @@
 <template>
-<!--  <div>-->
-<!--  <div>-->
-<!--    <open-data type="userAvatarUrl"></open-data>-->
-<!--<open-data type="userNickName"></open-data>-->
-<!--  </div>-->
-<!--<div>-->
-<!--<button open-type='getUserInfo' bindgetuserinfo='onGotUserInfo'>获取用户信息</button>-->
-<!--</div>-->
-<!--    </div>-->
-<div class="userContainer">
-    <div class="user">
-      <div class="userImg">
-        <!--<img src="/static/img/tx.png" alt="tx">-->
-        <open-data type="userAvatarUrl"></open-data>
-      </div>
-      <div class="userName">
-       <van-button  v-if="isLogin===false" plain hairline type="primary" size="small" color="#1bc6bf" open-type="getUserInfo" @getuserinfo="onGetUserInfo">登录/注册</van-button>
-      </div>
-<!--      用户名-->
-      <ul  class="userD">
-        <p class="userName">
-          <open-data type="userNickName"></open-data>
-          <open-data type="userGender" lang="zh_CN"></open-data>
-        </p>
-      </ul>
-      <!--        完善个人资料-->
-      <div>
-         <van-cell
-          icon="edit"
-          is-link
-       title="完善个人资料"
-        link-type="switchTab"
-       url="/pages/orderList/main"
-       />
-<!--        订单-->
-        <van-cell
-          icon="shop-o"
-          is-link
-       title="我的订单"
-        link-type="switchTab"
-       url="/pages/orderList/main"
-       />
-<!--        我的地址-->
-        <van-cell
-          icon="location-o"
-          is-link
-       title="我的地址"
-        link-type="switchTab"
-       url="/pages/orderList/main"
-       />
-<!--        我的评价-->
-          <van-cell
-          icon="records"
-          is-link
-       title="我的评价"
-        link-type="switchTab"
-       url="/pages/orderList/main"
-       />
-<!--联系卖家-->
-         <van-cell
-          icon="phone-o"
-          is-link
-       title="联系卖家"
-        link-type="switchTab"
-       url="/pages/orderList/main"
-       />
-<!--        退出登录-->
-        <div class="userLogIn">
-      <a>退出登陆</a>
-    </div>
-    </div>
+  <div class="userContainer">
+
   </div>
-</div>
 </template>
 
 <script>
-export default {
-computed: {
-  isLogin () {
-
-  },
+  export default {
+    computed: {},
+    onLoad () {
+      this.random_No()
+      this.createRandomId()
+      this.random_No2()
+      this.guid2()
+    },
+    data () {
+      return {
+        random_no: '',
+        test: '',
+      }
+    },
+    methods: {
+      random_No: function (randomLen) {
+        for (var i = 0; i < randomLen; i++) {
+          this.random_no += Math.floor(Math.random() * 10)
+        }
+        var  time=new Date().getTime()
+        this.random_no =time+ this.random_no
+        console.log(time,this.random_no)
+      },
+      random_No2: function () {
+          this.random_no = Math.random().toString().substr(2, 5)
+        var now = new Date(),
+          y = now.getFullYear(),
+          m = now.getMonth() + 1,
+          d = now.getDate()
+        const hour =  now.getHours()
+        const minute =  now.getMinutes()
+        const second =  now.getSeconds()
+        let time = y + (m < 10 ? '0' + m : m) + (d < 10 ? '0' + d : d) +hour+minute+second
+        this.random_no = time + this.random_no
+        console.log( this.random_no)
+      },
+      createRandomId () {
+        this.test = (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + (new Date()).getTime() + '-' + Math.random().toString().substr(2, 5)
+        console.log(this.test)
+      },
+guid2() {
+	/**
+   * @return {string}
+   */
+  function S4() {
+		return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+	}
+	let time1= (S4() +' '+ S4() + " " + S4()  );
+  console.log(time1)
 },
-  data () {
-    return {
+    },
 
-    }
-  },
-
-  onGotUserInfo:function(event){
-console.log(event);
-  },
-}
+  }
 </script>
 
 <style>

@@ -105,7 +105,7 @@
       AddMessage () {
         let message=this.value+this.message
         console.log(message)
-       wx.navigateTo({
+       wx.redirectTo ({
           url: `/pages/onSubmitOder/main?message=${message}`
         })
         },
