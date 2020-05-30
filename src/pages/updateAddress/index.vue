@@ -234,7 +234,6 @@
       },
 
       showPopup () {
-
         this.show = true
       },
       onClose () {
@@ -307,7 +306,7 @@
             title: '修改成功',
           })
           that.flat = false
-          wx.navigateTo({
+          wx.redirectTo({
             url: '/pages/address/main?flat=false',
           })
         })

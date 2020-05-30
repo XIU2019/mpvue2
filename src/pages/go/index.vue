@@ -31,7 +31,7 @@
     methods: {
       goHome1 () {
         wx.reLaunch({
-          url: '/pages/index/main'
+          url: '/pages/my/main'
         })
       },
       countTime () {
@@ -51,7 +51,7 @@
               this.timer = null
               //跳转的页面写在此处
               wx.reLaunch({
-                url: '/pages/index/main'
+                url: '/pages/my/main'
               })
             }
           }, 1000)

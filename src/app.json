@@ -1,11 +1,11 @@
 {
   "pages": [
+    "pages/go/main",
     "pages/orderDetail/main",
     "pages/products/main",
     "pages/self/main",
     "pages/my/main",
     "pages/commentList/main",
-    "pages/go/main",
     "pages/index/main",
     "pages/orderMessage/main",
     "pages/onSubmitOder/main",

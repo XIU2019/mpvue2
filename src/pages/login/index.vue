@@ -16,9 +16,9 @@
         <van-button block type="danger" @getuserinfo="getUserInfo"
                     open-type="getUserInfo">微信授权登录
         </van-button>
-        <a @click="admitLogin">
-          管理员登录入口
-        </a>
+<!--        <a @click="admitLogin">-->
+<!--          管理员登录入口-->
+<!--        </a>-->
       </div>
     </div>
 
@@ -127,11 +127,11 @@
         }
       },
       //管理员登录
-      admitLogin () {
-         wx.redirectTo({
-          url: '/pages/admitLogin/main'
-        })
-      },
+      // admitLogin () {
+      //    wx.redirectTo({
+      //     url: '/pages/admitLogin/main'
+      //   })
+      // },
     },
   }
 </script>
