@@ -2,17 +2,19 @@
   <div class="userContainer">
     <div class="user">
       <div class="userImg">
-        <div v-if="isLogin">
+        <div v-if="isLogin=== text1">
 
         </div>
-        <div v-else>
+        <div v-if="isLogin=== text2">
           <open-data type="userAvatarUrl"></open-data>
         </div>
 
       </div>
-      <div class="userName">
-        <div class="user_text" v-if="isLogin" @click="login">登录/注册</div>
-        <p class="userName" v-else>
+      <div class="userName" v-if="isLogin===text1">
+        <div class="user_text" @click="login">登录/注册</div>
+      </div>
+      <div class="userName" v-if="isLogin===text2">
+        <p class="userName">
           <open-data type="userNickName"></open-data>
           <open-data type="userGender" lang="zh_CN"></open-data>
         </p>
@@ -40,7 +42,7 @@
           icon="shop-o"
           is-link
           title="我的订单"
-         link-type="navigateTo"
+          link-type="navigateTo"
           url="/pages/orderList/main"
         />
         <!--        我的地址-->
@@ -59,7 +61,7 @@
           link-type="navigateTo"
           url="/pages/commentList/main"
         />
-         <!--        我的钱包-->
+        <!--        我的钱包-->
         <van-cell
           icon="balance-o"
           is-link
@@ -72,7 +74,7 @@
           icon="service-o"
           is-link
           title="客服中心"
-        link-type="navigateTo"
+          link-type="navigateTo"
           url="/pages/orderList/main"
         />
         <!--        退出登录-->
@@ -95,7 +97,7 @@
     onLoad: function (e) {
       console.log(e.isLogin)
       Object.assign(this.$data, this.$options.data())//用于重新定义data的数据
-      this.isLogin = false
+      this.isLogin = e.isLogin
     },
     onShow: function () {
 
@@ -106,7 +108,8 @@
     data () {
       return {
         isLogin: true,   //用于视图的判断    如果true则显示登陆注册按钮，false则显示用户信息
-
+        text1: 'true',
+        text2: 'false',
       }
     },
     methods: {

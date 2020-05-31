@@ -109,8 +109,8 @@
             })
             that.isLogin = false
             let isLogin = that.isLogin
-            wx.switchTab({
-              url: '/pages/my/main?isLogin=false'
+            wx.reLaunch({
+              url: `/pages/my/main?isLogin=${isLogin}`
             })
           }
         })

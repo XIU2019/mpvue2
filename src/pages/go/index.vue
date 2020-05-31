@@ -50,8 +50,9 @@
               clearInterval(this.timer)
               this.timer = null
               //跳转的页面写在此处
+              let  isLogin=true
               wx.reLaunch({
-                url: '/pages/my/main'
+                url: `/pages/my/main?isLogin=${isLogin}`
               })
             }
           }, 1000)
